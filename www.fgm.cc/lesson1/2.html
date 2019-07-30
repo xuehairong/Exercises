@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>网页换肤</title>
+    <link href='green.css' rel='stylesheet'></link>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        #outer{
+            width: 500px;
+            margin:0 auto;
+        }
+        ul{
+            margin: 0;padding: 0;
+            list-style: none;
+        }
+        li{
+            position: relative;
+            display: block;/* 能去掉li之前的marker */
+        }
+        #nav,#skin{
+            /* 处理ul塌陷 */
+            /* overflow:hidden;
+            zoom:1; */
+        }
+        #skin{
+            float: left;
+        }
+        #skin > li{
+            float: left;
+            width: 20px;height: 20px;
+            cursor: pointer;
+        }
+        #skin > li + li{
+            margin-left: 10px;
+        }
+        #red{
+            background: red;
+            border: red solid 5px;
+        }
+        #green{
+            background: green;
+            border: green solid 5px;
+        }
+        #black{
+            background: black;
+            border: black solid 5px;
+        }
+        #skin .current{
+            background: white !important;
+        }
+        #nav{
+            border:1px solid #ffffff;
+            float: left;/* 当ul跟li一起浮动时就不会塌陷 */
+            width:100%;
+        }
+        #nav > li{
+            width:16.666%;
+            line-height: 24px;
+            text-align: center;
+            float: left;
+            font-size: 12px;
+            color: #ffffff;
+            list-style-type:none;
+        }
+        #nav > li + li{
+            border-left:1px solid #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <ul id="skin">
+            <li id="red"></li>
+            <li id="green" class="current"></li>
+            <li id="black"></li>
+        </ul>
+        <ul id="nav">
+            <li>新闻</li>
+            <li>娱乐</li>
+            <li>体育</li>
+            <li>电影</li>
+            <li>音乐</li>
+            <li>旅游</li>
+        </ul>
+    </div>
+    <script>
+     window.onload=function(){
+         let link=document.getElementsByTagName('link')[0]
+         let skins=document.getElementById('skin').children
+         for(let i=0;i<skins.length;i++){
+             skins[i].onclick=function(){
+                for(let j=0;j<skins.length;j++){ 
+                    skins[j].classList.remove('current')
+                }
+                this.classList.add('current')
+                link.href=this.id+'.css'
+             }
+         }
+     }
+    </script>
+</body>
+</html>

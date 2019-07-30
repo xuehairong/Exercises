@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>控制Div属性</title>
+    <style>
+        body{
+            text-align: center
+        }
+        div{
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            margin: 10px auto
+        }
+    </style>
+</head>
+<body>
+    <button>变宽</button>
+    <button>变高</button>
+    <button>变色</button>
+    <button>隐藏</button>
+    <button>重置</button>
+    <div id="div"></div>
+    <script>
+        window.onload=function(){
+            let btns=document.getElementsByTagName('button')
+            let div=document.getElementById('div')
+            let oAtt = ["width","height","background","display","display"];
+	        let oVal = ["200px","200px","red","none","block"];
+            for(let i=0;i<btns.length;i++){
+                btns[i].onclick=function(){
+                    i==btns.length-1&&(div.style.cssText='')//如果是最后一个按钮就清除样式
+                    div.style[oAtt[i]]=oVal[i]
+                }
+            }
+        }
+        
+    </script>
+</body>
+</html>
