@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>记住密码提示框</title>
+    <style>
+        body{
+            font-size: 12px
+        }
+        .tip{
+            width: 200px;
+            border:1px solid red;
+            background:#ffefa4;
+            padding: 5px;
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <label id="autoLogin"><input type="checkbox">两周内自动登录</label>
+    <div class="tip">
+        为了您的信息安全，请不要在网吧或公用电脑使用此功能！
+    </div>
+    <script>
+        window.addEventListener('load',function(){
+            let al=document.getElementById('autoLogin')
+            let tip=document.getElementsByClassName('tip')[0]
+            al.addEventListener('mouseover',function(){
+                tip.style.display='block'
+            })
+            al.addEventListener('mouseleave',function(){
+                tip.style.display='none'
+            })
+        })
+    </script>
+</body>
+</html>

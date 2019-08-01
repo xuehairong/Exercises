@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>百度输入法</title>
+    <style>
+        ul,li{
+            margin:0;
+            padding:0;
+        }
+        ul{
+            list-style: none;
+            border:1px solid #9a99ff;
+            width: 100px;
+            display: none;
+            color: #00c
+        }
+        li{
+            padding: 5px;
+            cursor: pointer;
+        }
+        li:last-child{
+            border-top: 1px solid #9a99ff;
+        }
+        li:hover{
+            background: #d9e1f6;
+        }
+    </style>
+</head>
+<body>
+    <button>输入法</button>
+    <ul>
+        <li>手写</li>
+        <li>拼音</li>
+        <li id="close">关闭</li>
+    </ul>
+    <script>
+     window.addEventListener('load',function(){
+         let btn=document.getElementsByTagName('button')[0]
+         let ul=document.getElementsByTagName('ul')[0]
+         let close=document.getElementById('close')
+         btn.addEventListener('click',function(){
+            let style=getComputedStyle(ul)
+            ul.style.display=style.display=='none'?'block':'none'
+         })
+         close.addEventListener('click',function(){
+            ul.style.display='none'
+         })
+     })
+    </script>
+</body>
+</html>
