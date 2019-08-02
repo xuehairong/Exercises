@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+     input{
+         width:400px
+     }
+    </style>
+</head>
+<body>
+    <input type="text" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15">输入数字求和，数字之间用半角","号分隔
+    <button id="sum">求和</button>
+    <label for="sum"></label>
+    <script>
+      window.addEventListener('load',function(){
+        let btn=document.getElementById('sum')
+        let input=document.getElementsByTagName('input')[0]
+        input.addEventListener('keyup',function(){
+            this.value = this.value.replace(/[^(\d)|(,)]/,"")
+        })
+        btn.addEventListener('click',function(){
+            let value=input.value,
+                text=document.getElementsByTagName('label')[0],
+                array=value.split(','),sum=0
+          array.forEach(element => {
+              let number
+            sum+=isNaN(number=Number(element))?'0':number
+          });
+          text.innerHTML=sum
+        })
+          
+      })
+    </script>
+</body>
+</html>

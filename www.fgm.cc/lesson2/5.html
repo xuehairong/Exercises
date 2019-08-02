@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函数传参，改变div任意属性值</title>
+    <style>
+     #outer{
+         width: 750px;
+         margin:0 auto;
+         text-align: center;
+     }
+     #result{
+         width: 200px;height: 200px;
+         background: #000;
+         color: #fff;
+         font-size: 12px;
+         padding: 10px;
+         margin:0 auto;
+     }
+     label{
+         display:block
+     }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <label for="name">属性名：<input type="text" id="name" value="background"></label>
+        <label for="value">属性值：<input type="text" id="value" value="blue"></label>
+        <button id="submit">确定</button>
+        <button id="reset">重置</button>
+        <div id="result">在上方输入框输入"属性名"及"属性值"，点击确定按钮查看效果</div>
+    </div>
+    <script>
+        window.addEventListener('load',function(){
+            let submit=document.getElementById('submit')
+            let reset=document.getElementById('reset')
+            let result=document.getElementById('result')
+            submit.addEventListener('click',function(){
+                let name=document.getElementById('name').value
+                let value=document.getElementById('value').value
+                result.style[name]=value
+            })
+            reset.addEventListener('click',function(){
+                result.style.cssText=''
+            })
+        })
+    </script>
+</body>
+</html>
