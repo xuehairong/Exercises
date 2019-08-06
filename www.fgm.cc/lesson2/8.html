@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>简易js年历</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+     ul,li{
+         margin: 0;padding: 0;list-style: none;
+     }
+     p{margin: 0}
+     .outer{
+         width: 250px;
+         margin:0 auto;
+         background: #EAEAEA;
+         padding: 5px;
+     }
+     ul{
+         display: flex;
+         flex-wrap:wrap;
+         text-align: center;
+         line-height: 30px;
+     }
+     li{
+         width:25%;
+         padding:5px;
+         /* line-height: 25px; */
+         cursor: pointer;
+     }
+     li>div{
+        background: #424242;
+         color: #ffffff;
+         border: 1px solid #000;
+     }
+     li>div.current{
+         background: #ffffff;
+         color: #FF6699;
+     }
+     li p:first-child{
+         font-weight: bold
+     }
+     #content{
+        background: #F1F1F1;
+        border: 1px solid #ffffff;
+        margin:5px;
+        padding: 5px;
+     }
+     .title{font-size: 14px;color:#666666;font-weight: bold}
+     .article{font-size: 12px;color: #7C667C}
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <ul>
+            <li><div><p>1</p><p>JAN</p></div></li>
+            <li><div><p>2</p><p>FER</p></div></li>
+            <li><div><p>3</p><p>MAR</p></div></li>
+            <li><div><p>4</p><p>APR</p></div></li>
+            <li><div><p>5</p><p>MAY</p></div></li>
+            <li><div class="current"><p>6</p><p>JUN</p></div></li>
+            <li><div><p>7</p><p>JUL</p></div></li>
+            <li><div><p>8</p><p>AUG</p></div></li>
+            <li><div><p>9</p><p>SEP</p></div></li>
+            <li><div><p>10</p><p>OCT</p></div></li>
+            <li><div><p>11</p><p>NOV</p></div></li>
+            <li><div><p>12</p><p>DEC</p></div></li>
+        </ul>
+        <div id="content">
+            <p class="title"><span id="month">6</span>月节日</p>
+            <p id="article">端午节：6月4日至6日放假3天。</p>
+        </div>
+    </div>
+    <script>
+    window.addEventListener('load',function(){
+        let oArray = [
+            "元旦：1月1日至3日放假三天。",
+            "春节：2月2日至8日放假7天。",
+            "妇女节：3月8日妇女节，与我无关。",
+            "清明节：4月3日至5日放假3天",
+            "劳动节：4月30日至5月2日放假3天。",
+            "端午节：6月4日至6日放假3天。",
+            "小暑：7月7日小暑。不放假。",
+            "七夕节：8月6日七夕节。不放假。",
+            "中秋节：9月10日至12日放假3天。",
+            "国庆节：10月1日至7日放假7天。",
+            "立冬：11月8日立冬。不放假。",
+            "艾滋病日:12月1日<br />废除奴隶制国际日:12月2日。"
+        ];
+        let ul=document.getElementsByTagName('ul')[0]
+        ul.addEventListener('mouseover',function(event){
+            if(event.target.tagName=='LI'){
+                console.log(event.target)
+                let lis=this.getElementsByTagName('li')
+                let currentMonth=1;article=document.getElementById('article');month=document.getElementById('month');
+                for(let i=0;i<lis.length;i++){
+                    lis[i].getElementsByTagName('div')[0].classList.remove('current')
+                    if(lis[i]==event.target){
+                        currentMonth=i;
+                    }
+                }
+                event.target.getElementsByTagName('div')[0].classList.add('current')
+                month.innerHTML =currentMonth+1;
+                article.innerHTML =oArray[currentMonth]
+            }
+            
+        })
+    })
+    </script>
+</body>
+</html>

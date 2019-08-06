@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>提示框效果</title>
+    <style>
+        *{box-sizing: border-box}
+        #outer{
+            width:600px;
+            margin:0 auto;
+            border:1px solid;
+            padding: 8px;
+            /* margin:auto;
+            width:min-content; */
+            
+        }
+        #car-wrapper{
+            display:flex;
+            flex-wrap: wrap;
+        }
+        #car-wrapper>div{
+            width: 20%;
+            padding: 5px;
+            position: relative;
+        }
+        #car-wrapper>div div{
+            background: #F0F0F0;
+            border:1px solid #000;
+            height: 100px;
+            padding: 5px;
+        }
+        #car-wrapper>div:hover{
+            cursor:crosshair;
+        }
+        /* .blur{
+            position: absolute;
+            top:0;left: 0;
+            width: 100%;
+            height: 100%;
+            background:rgba(255,255,255,0.7);
+        } */
+        img{
+            position:absolute;
+            top:-10px;left:-10px;
+            border:2px solid #CCCCCC;
+            z-index:999;
+            display: none;
+        }
+        h4{text-align: center}
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <h4>名车车标展示-鼠标移过显示车标</h4>
+        <div id="car-wrapper">
+            <div> <div class="car">BMW<img src="image/1.jpg" alt=""></div></div>
+            <div><div class="car">Alfa Romeo<img src="image/2.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/3.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/4.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/5.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/6.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/7.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/8.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/9.jpg" alt=""></div></div>
+            <div><div class="car">BMW<img src="image/10.jpg" alt=""></div></div>
+        </div>
+        <!-- <div class="img"><div class="blur"></div></div>
+        <div class="img"><div class="blur"></div><img src="image/2.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/3.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/4.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/5.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/6.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/7.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/8.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/9.jpg" alt=""></div>
+        <div class="img"><div class="blur"></div><img src="image/10.jpg" alt=""></div> -->
+    </div>
+    <script>
+    window.addEventListener('load',function(){
+        let carWrapper=document.getElementById('car-wrapper')
+        let cars=document.getElementsByClassName('car')
+        carWrapper.addEventListener('mouseover',function(event){
+            if(event.target.tagName=='DIV'){
+                let img=event.target.getElementsByTagName('img')
+                // console.log(img)
+                if(img&&img[0]){
+                    img[0].style.display='block'
+                }
+            }
+        })
+        for(let i=0;i<cars.length;i++){
+            cars[i].addEventListener('mouseleave',function(){
+                this.getElementsByTagName('img')[0].style.display='none'
+            })
+        }
+        // for(let i=0;i<imgs.length;i++){
+        //     imgs[i].addEventListener('mouseover',function(){
+        //         this.getElementsByClassName('blur')[0].style.display='none'
+        //     })
+        //     imgs[i].addEventListener('mouseleave',function(){
+        //         this.getElementsByClassName('blur')[0].style.display='block'
+        //     })
+        // }
+    })
+    </script>
+</body>
+</html>

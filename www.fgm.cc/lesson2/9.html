@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单一按钮显示/隐藏</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        ul,li{
+            margin:0;padding:0;
+            list-style: none;
+        }
+        #player{
+            border: 1px solid #AAAAAA;
+            width: 200px;
+            margin:0 auto;
+        }
+        #select{
+            height: 30px;
+            line-height: 30px;
+            border:1px solid #ffffff;
+            background: #CED3D7;
+            padding:0 10px;
+            color:#57647F;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+        #list{
+            font-size: 12px;
+            background: #E9EDF2;
+        }
+        li{
+            line-height: 25px;
+            /* padding: 0 10px; */
+            /* cursor: pointer; */
+        }
+        li:hover{
+            background: #ffffff
+        }
+        a{
+            display:block;
+            text-decoration: none;
+            color: #6b7980;
+            padding: 0 10px;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        .triangle{
+            width: 0;height: 0;
+            border-top:5px solid #4C5F73 ;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid transparent;
+            position:absolute;
+            right: 10px;top:50%;
+            /* transition: transform .3s; */
+        }
+        .hidden{
+            transform: rotate(180deg);
+            top:5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="player">
+        <div id="select">播放列表...<div class="triangle"></div></div>
+        <div id="list">
+            <ul>
+                <li><a href="">玩家之徒 - 蔡依林</a></li>
+                <li><a href="">原谅我就是这样的女生 - 戴佩妮</a></li>
+                <li><a href="">猜不透 - 丁当</a></li>
+                <li><a href="">自导自演 - 周杰伦</a></li>
+                <li><a href="">浪漫我 - 仙子</a></li>
+                <li><a href="">流年 - 王菲</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+     window.addEventListener('load',function(){
+         let select=document.getElementById('select')
+         let list=document.getElementById('list')
+         let triangle=document.getElementsByClassName('triangle')[0]
+         select.addEventListener('click',function(){
+             list.style.display=getComputedStyle(list).display=='none'?'block':'none'
+             if(triangle.classList.contains('hidden')){
+                 triangle.classList.remove('hidden')
+             }else{
+                triangle.classList.add('hidden')
+             }
+         })
+     })
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>复选框，全选</title>
+    <style>
+     *{box-sizing: border-box}
+     #outer{
+         width: 150px;
+         margin:0 auto;
+         font-size: 12px;
+         border:1px solid #000;
+         border-radius: 4px;
+         background: #FAFAFA;
+         padding:0 5px;
+     }
+     dt{
+         border-bottom: 1px solid #000;
+         height: 40px;line-height: 40px;
+     }
+     dd,dl{
+         margin: 0;
+         vertical-align: center
+     }
+     dd{
+         height: 30px;
+         line-height: 30px;
+     }
+     input{
+         margin-right: 5px;
+     }
+     a{
+         margin-left: 10px;
+         text-decoration: none;
+         color:#0099FF
+     }
+     a:hover{
+         color: red
+     }
+     #check-all-text{
+         font-weight: bold
+     }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <dl>
+            <dt><input id="check-all" type="checkbox"><span id="check-all-text">全选</span><a id="reverse" href="javascript:;">反选</a></dt>
+            <dd><input type="checkbox">选项（一）</dd>
+            <dd><input type="checkbox">选项（二）</dd>
+            <dd><input type="checkbox">选项（三）</dd>
+            <dd><input type="checkbox">选项（四）</dd>
+            <dd><input type="checkbox">选项（五）</dd>
+            <dd><input type="checkbox">选项（六）</dd>
+            <dd><input type="checkbox">选项（七）</dd>
+            <dd><input type="checkbox">选项（八）</dd>
+            <dd><input type="checkbox">选项（九）</dd>
+            <dd><input type="checkbox">选项（十）</dd>
+        </dl>
+    </div>
+    <script>
+    window.addEventListener('load',function(){
+        let checkAll=document.getElementById('check-all')
+        let checkAllText=document.getElementById('check-all-text')
+        let dds=document.getElementsByTagName('dd')
+        let reverse=document.getElementById('reverse')
+        let dl=document.getElementsByTagName('dl')[0]
+        checkAll.addEventListener('click',function(){
+            checkAllText.innerHTML=checkAll.checked?'全不选':'全选'
+            for(let i=0;i<dds.length;i++){
+                dds[i].getElementsByTagName('input')[0].checked=checkAll.checked
+            }
+        })
+        reverse.addEventListener('click',function(){
+            for(let i=0;i<dds.length;i++){
+                dds[i].getElementsByTagName('input')[0].checked=!dds[i].getElementsByTagName('input')[0].checked
+            }
+            isCheckAll()
+        })
+        dl.addEventListener('click',function(event){
+            if(event.target.tagName=='INPUT'&&event.target.parentElement.tagName=='DD'){
+                isCheckAll()
+            }
+        })
+
+        function isCheckAll(){
+            let sum=0
+            for(let i=0;i<dds.length;i++){
+                dds[i].getElementsByTagName('input')[0].checked&&sum++
+            }
+            checkAllText.innerHTML=sum==dds.length?'全不选':'全选'
+            checkAll.checked=sum==dds.length?true:false
+        }
+    })
+    </script>
+</body>
+</html>

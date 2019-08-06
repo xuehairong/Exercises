@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鼠标移过，改变图片路径</title>
+    <style>
+    ul,li{
+        margin:0;padding:0;list-style:none;
+    }
+    body{
+        background: #000
+    }
+    ul{
+        width: 212px;
+        background: #ffffff;
+        margin:0 auto;
+        padding: 0 0 2px 2px;
+        border:5px solid #ffffff
+    }
+    ul:after{
+        content: '';
+        display: block;
+        clear: both;
+        overflow: hidden;
+        height: 0;
+        visibility: hidden;
+    }
+    li{
+        float: left;
+        margin: 2px 2px 0 0;
+        width:50px;height: 50px;
+        cursor: pointer;
+    }
+    li:first-child{
+        width:154px;height: 154px;
+    }
+    #loading{
+        position:absolute;
+        top:0;left:0;width:156px;height:156px;
+        display:none;opacity:0.5;filter:alpha(opacity=50);
+        background:#fff url(image/loading.gif) 50% 50% no-repeat;}
+
+    img{
+        border-radius: 4px;
+    }
+    
+    </style>
+</head>
+<body>
+    <ul>
+        <li><img src="image/big_1.jpg" alt=""><div id="loading"></div></li>
+        <li><img src="image/small_1.jpg" alt=""></li>
+        <li><img src="image/small_2.jpg" alt=""></li>
+        <li><img src="image/small_3.jpg" alt=""></li>
+        <li><img src="image/small_4.jpg" alt=""></li>
+        <li><img src="image/small_5.jpg" alt=""></li>
+        <li><img src="image/small_6.jpg" alt=""></li>
+        <li><img src="image/small_7.jpg" alt=""></li>
+        <li><img src="image/small_8.jpg" alt=""></li>
+        <li><img src="image/small_9.jpg" alt=""></li>
+        <li><img src="image/small_10.jpg" alt=""></li>
+        <li><img src="image/small_11.jpg" alt=""></li>
+    </ul>
+    <script>
+    window.addEventListener('load',function(){
+        let ul=document.getElementsByTagName('ul')[0]
+        let loading=document.getElementById('loading')
+        let showImg=ul.firstElementChild.getElementsByTagName('img')[0]
+        ul.addEventListener('mouseover',function(event){
+            if(event.target.tagName=='IMG'&&event.target.src.indexOf('big')==-1){
+                let img=new Image();
+                img.src=showImg.src=event.target.src.replace('small','big')
+                img.complete?loading.style.display='none':(showImg.onload=function(){
+                    loading.style.display='none'
+                })
+            }
+        })
+    })
+    </script>
+</body>
+</html>
