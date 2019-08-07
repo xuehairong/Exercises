@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{box-sizing: border-box}
+     .calculate{
+         width: 260px;
+         margin: 0 auto;
+     }
+     .monitor{
+         height: 100px;
+         background: #DFE1C9;
+         /* line-height: 100px; */
+         position: relative;
+         text-align: right;
+     }
+     #currentText{
+        font-size: 50px;
+         font-weight: bold;
+         height: 100px;
+        line-height: 100px;
+        padding: 0 5px;
+     }
+     #formula{
+        position:absolute;
+        top:5px;right: 5px;
+        font-size: 12px;
+        font-weight: bold;
+     }
+     input{
+         float: left;
+         width: 50px;
+         height: 30px;
+     }
+     .operator{
+         position: relative;
+         padding: 10px;
+         background: #1F1F1F;
+     }
+     .operator:after{
+        content: '';
+        clear:both;
+        display: block;
+     }
+     input{
+         margin: 10px 5px;
+         font-size: 20px;
+         cursor: pointer;
+     }
+     .height2{
+         position: absolute;
+         height: 80px;
+         bottom: 10px;right: 10px
+     }
+     .width2{
+         width: 110px
+     }
+    </style>
+</head>
+<body>
+    <div class="calculate">
+        <div class="monitor">
+            <div id="formula"></div>
+            <div id="currentText"></div>
+        </div>
+        <div class="operator">
+            <input name="symbol" type="button" value="c">
+            <input name="symbol" type="button" value="%">
+            <input name="symbol" type="button" value="/">
+            <input name="symbol" type="button" value="*">
+            <input name="number" type="button" value="7">
+            <input name="number" type="button" value="8">
+            <input name="number" type="button" value="9">
+            <input name="symbol" type="button" value="-">
+            <input name="number" type="button" value="4">
+            <input name="number" type="button" value="5">
+            <input name="number" type="button" value="6">
+            <input name="symbol" type="button" value="+">
+            <input name="number" type="button" value="1">
+            <input name="number" type="button" value="2">
+            <input name="number" type="button" value="3">
+            <input name="symbol" class="height2" type="button" value="=">
+            <input name="number" class="width2" type="button" value="0">
+            <input name="number" type="button" value=".">
+        </div>
+    </div>
+</body>
+<script>
+window.addEventListener('load',function(){
+    let operator=document.getElementsByClassName('operator')[0]
+    let currentText=document.getElementById('currentText')
+    let formula=document.getElementById('formula')
+    let isEnd=false
+    operator.addEventListener('click',function(event){
+        if(event.target.tagName=='INPUT'){
+            if(event.target.value=='c'){
+                currentText.innerHTML=''
+                formula.innerHTML=''
+            }else if(event.target.value=='='){
+                formula.innerHTML+=currentText.innerHTML
+                currentText.innerHTML=eval(formula.innerHTML)
+                isEnd=true
+            }else if(event.target.name=='number'){
+                currentText.innerHTML=isEnd?event.target.value:currentText.innerHTML.replace(/[^(\d)|(.)]/,'')+event.target.value
+                isEnd&&(formula.innerHTML='')
+                isEnd=false
+            }else{
+                formula.innerHTML=isEnd?currentText.innerHTML+event.target.value:formula.innerHTML+currentText.innerHTML+event.target.value
+                currentText.innerHTML=event.target.value
+                isEnd=false
+            }
+            
+        }
+    })
+})
+</script>
+</html>

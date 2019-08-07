@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>判断数字是否为2位数</title>
+    <style>
+    body{text-align: center}
+    input{
+        width: 50px;
+         background: #F0F0F0;
+         border: 1px solid #CCCCCC;
+         height: 20px;
+         margin-right: 10px;
+    }
+    </style>
+</head>
+<body>
+    <input type="text"><button>是否为两位数</button>
+</body>
+<script>
+window.addEventListener('load',function(){
+    let input=document.getElementsByTagName('input')[0]
+    let btn=document.getElementsByTagName('button')[0]
+    input.addEventListener('keyup',function(){
+        this.value=this.value.replace(/[^\d]/,'')
+    })
+    btn.addEventListener('click',function(){
+        !input.value?alert('请输入数字'):
+        alert(input.value.length==2?'√ 是两位数':`这是${input.value.length}位数`)
+    })
+})
+</script>
+</html>

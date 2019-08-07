@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #outer{
+            color: white;
+            background: #000;
+            height: 80px;
+            line-height:80px;
+            text-align: center;
+            width: 300px;
+            margin:0 auto;
+        }
+        span{
+            padding: 0px 10px;
+            border:2px solid #B4B4B4;
+            background: #ffffff;
+            color:#000;
+            margin:0 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <span id="hour"></span>点  
+        <span id="minute"></span>分  
+        <span id="second"></span>秒  
+    </div>
+</body>
+<script>
+    window.addEventListener('load',function(){
+        let hour=document.getElementById('hour')
+        let minute=document.getElementById('minute')
+        let second=document.getElementById('second')
+        setTime()
+        setInterval(setTime,1000)
+        function setTime(){
+            let time=new Date()
+            hour.innerHTML=time.getHours()
+            minute.innerHTML=time.getMinutes()
+            second.innerHTML=time.getSeconds()
+        }
+    })
+</script>
+</html>

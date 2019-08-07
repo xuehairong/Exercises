@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #outer{
+            color: white;
+            background: #000;
+            text-align: center;
+            width: 300px;
+            margin:0 auto;
+        }
+        .time{
+            height: 30px;
+            line-height:30px;
+        }
+        span{
+            padding: 0px 10px;
+            border:2px solid #B4B4B4;
+            background: #ffffff;
+            color:#000;
+            margin:0 10px;
+        }
+        #cancel{display:none}
+
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div class="time">
+            <span id="minute">01</span>分钟  
+            <span id="second">30</span>秒  
+        </div>
+        <div>
+            <button>开启</button>
+            <button id="cancel">取消</button>
+        </div>
+    </div>
+</body>
+<script>
+    window.addEventListener('load',function(){
+        let minute=document.getElementById('minute')
+        let second=document.getElementById('second')
+        let btn=document.getElementsByTagName('button')
+        let interval
+        btn[0].addEventListener('click',function(){
+            this.style.display='none'
+            btn[1].style.display='inline'
+            setTime()
+            interval=setInterval(setTime,1000)
+        })
+        btn[1].addEventListener('click',function(){
+            clearInterval(interval)
+            this.style.display='none'
+            btn[0].style.display='inline'
+        })
+        
+        function setTime(){
+            if(parseInt(second.innerHTML)==0){
+                if(parseInt(minute.innerHTML)>0){
+                    minute.innerHTML=format(parseInt(minute.innerHTML)-1)
+                    second.innerHTML=59
+                }else{
+                    clearInterval(interval)
+                }
+            }else{
+                second.innerHTML=format(parseInt(second.innerHTML)-1)
+            }
+        }
+        function format(a)
+        {
+            return a.toString().replace(/^(\d)$/,'0$1')
+        }
+
+    })
+</script>
+</html>
