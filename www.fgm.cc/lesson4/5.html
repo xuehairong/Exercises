@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>css函数——设置/读取对象的属性</title>
+    <style>
+        #box{
+            width: 400px;height: 200px;
+            background-color: rgb(254, 244, 235);
+            border:1px solid #FF6600;
+            margin:0 auto;
+            padding: 10px;
+        }
+        input{
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            background: #FF6600;
+            padding: 2px 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <input type="button" value="Get Style">
+        <input type="button" value="Set Style">
+        <input type="button" value="Default Style">
+    </div>
+</body>
+<script>
+function css(obj,attr,value){
+    switch(arguments.length){
+        case 2://二个参数，并第二个参数是对象，批量设置属性
+            if(Object.prototype.toString.call(arguments[1])=="[object Object]"){
+                for(let item in attr)obj.style[item]=attr[item]
+            }else{//二个参数, 如果第二个参数是字符串, 读取属性值
+                return obj.currentStyle?obj.currentStyle[attr]:getComputedStyle(obj,null)[attr]
+                // return getComputedStyle(obj)[attr]
+            }
+            break;
+        case 3:
+            obj.style[attr]=value
+            break
+        default:
+            alert("参数错误")
+            
+    }
+}
+window.addEventListener('load',function(){
+    let box=document.getElementById('box')
+    let btns=document.getElementsByTagName('input')
+    btns[0].addEventListener('click',function(){
+        // let style=getComputedStyle(box)
+        // alert(`width:${style.width}\nheight:${style.height}\nbackground-color:${style.backgroundColor}`)
+        alert(`width:${css(box,'width')}\nheight:${css(box,'height')}\nbackground-color:${css(box,'backgroundColor')}`)
+    })
+    btns[1].addEventListener('click',function(){
+        css(box,{width:'330px',height:'100px',backgroundColor:'rgb(239, 248, 255)',borderColor:'#0084FF'})
+        // box.style.width='330px'
+        // box.style.height='100px'
+        // box.style.backgroundColor='rgb(239, 248, 255)'
+        // box.style.borderColor='#0084FF'
+        for(let i=0;i<btns.length;i++){
+            // btns[i].style.background='#0084FF'
+            css(btns[i],'background','#0084FF')
+        }
+    })
+    btns[2].addEventListener('click',function(){
+        box.style.cssText=''
+        for(let i=0;i<btns.length;i++){
+            // btns[i].style.cssText=''
+            css(btns[i],'cssText','')
+        }
+    })
+})
+</script>
+</html>

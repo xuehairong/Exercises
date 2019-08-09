@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>setTimeout应用</title>
+    <style>
+        /* *{box-sizing: border-box} */
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+        #nav{
+            position: relative;
+            width: 888px;
+            margin: 0 auto;
+        }
+        #nav ul {
+            line-height: 36px;
+            background: linear-gradient(#5B86B2 40%, #225D98 60%);
+            border-radius: 6px;
+        }
+
+        ul:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        #nav ul>li {
+            float: left;
+            width: 110px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            /* position: relative; */
+        }
+        #nav ul>li>a{
+            color: #ffffff;
+        }
+
+        #nav ul > li a:hover{
+          font-weight: bold
+      }
+        .subnav {
+            position: absolute;
+            top: 41px;
+            color: #000;
+            white-space: nowrap;
+            padding: 0 10px;
+            background: linear-gradient(#EEF3F7 40%, #D5DFEB 60%);
+            border-radius: 10px;
+            font-size: 12px;
+            border: 1px solid #235e99;
+            display:none;
+        }
+
+        .subnav a {
+            padding: 10px;
+            color: #235e99
+        }
+        .subnav a:hover {
+            font-weight: 400;
+            text-decoration: underline
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="nav">
+    <ul>
+        <li><a href="javascript:;">站长之家</a></li>
+        <li><a href="javascript:;">行业资讯</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">业界动态</a>|
+                    <a href="javascript:;">收购融资</a>|
+                    <a href="javascript:;">门户动态</a>|
+                    <a href="javascript:;">搜索引擎</a>|
+                    <a href="javascript:;">网络游戏</a>|
+                    <a href="javascript:;">电子商务</a>|
+                    <a href="javascript:;">广告传媒</a>|
+                    <a href="javascript:;">厂商开发</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">站长在线</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">站长报道</a>|
+                    <a href="javascript:;">好站推荐</a>|
+                    <a href="javascript:;">站长聚会</a>|
+                    <a href="javascript:;">站长访谈</a>|
+                    <a href="javascript:;">站长茶馆</a>|
+                    <a href="javascript:;">网站排行</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">网站运营</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">建站经验</a>|
+                    <a href="javascript:;">策划盈利</a>|
+                    <a href="javascript:;">搜索优化</a>|
+                    <a href="javascript:;">网站推广</a>|
+                    <a href="javascript:;">免费资源</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">设计在线</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">酷站推荐</a>|
+                    <a href="javascript:;">网页设计</a>|
+                    <a href="javascript:;">WEB标准</a>|
+                    <a href="javascript:;">视频处理</a>|
+                    <a href="javascript:;">设计活动</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">网络编程</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">Asp编程</a>|
+                    <a href="javascript:;">Php编程</a>|
+                    <a href="javascript:;">.Net编程</a>|
+                    <a href="javascript:;">Xml编程</a>|
+                    <a href="javascript:;">Access</a>|
+                    <a href="javascript:;">Mssql</a>|
+                    <a href="javascript:;">Mysql</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">联盟资讯</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">联盟动态</a>|
+                    <a href="javascript:;">联盟介绍</a>|
+                    <a href="javascript:;">联盟点评</a>|
+                    <a href="javascript:;">网赚技巧</a>
+                </span>
+            </div>
+        </li>
+        <li><a href="javascript:;">服务器</a>
+            <div class="subnav">
+                <span>
+                    <a href="javascript:;">Web服务器</a>|
+                    <a href="javascript:;">Ftp服务器</a>|
+                    <a href="javascript:;">Mail服务器</a>|
+                    <a href="javascript:;">Dns服务器</a>|
+                    <a href="javascript:;">Win服务器</a>|
+                    <a href="javascript:;">Linux服务器</a>|
+                    <a href="javascript:;">安全防护</a>|
+                    <a href="javascript:;">虚拟主机</a>
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+<script>
+window.addEventListener('load',function(){
+    let nav=document.getElementById('nav')
+    let lis=nav.getElementsByTagName('li')
+    let subNavs=nav.getElementsByClassName('subnav')
+    let timer=null
+    nav.addEventListener('mouseover',function(e){
+        let target=(e||window.event).target
+        if(target.tagName=='LI'){
+            //隐藏所有子菜单
+			for (i = 0; i < subNavs.length; i++) subNavs[i].style.display = "none";
+            let subNav=target.getElementsByClassName('subnav')[0]
+            if(!subNav) return 
+            subNav.style.display='block'
+            //判断显示区域
+			nav.offsetWidth - target.offsetLeft > subNav.offsetWidth ? 
+			//如果在显示范围居左显示
+			subNav.style.left = target.offsetLeft + "px" :
+			//超出显示范围居右显示
+			subNav.style.right = 0;
+            subNav.onmouseover=function(e){
+                (e||window.event).cancleBubble=true
+                clearTimeout(timer)
+            }
+            subNav.onmouseout=function(){
+                (e||window.event).cancleBubble=true//设置为不冒泡到上面的菜单
+                timer=setTimeout(function(){
+                    subNav.style.display='none'
+                },300)
+            }
+        }
+    })
+    // nav.addEventListener('mouseout',function(e){
+    //     let target=(e||window.event).target
+    //     if(target.tagName=='LI'){
+    //         let subNav=target.getElementsByClassName('subnav')[0]
+    //         if(subNav){
+    //             timer=setTimeout(function(){
+    //                 subNav.style.display='none'
+    //             },300)
+    //         }
+    //     }
+    // })
+    for(let i=0;i<lis.length;i++){
+        lis[i].firstElementChild.addEventListener('mouseout',function(){
+            let target=lis[i].getElementsByClassName('subnav')[0]
+            if(target){
+                timer=setTimeout(function(){
+                    target.style.display='none'
+                },300)
+            }
+        })
+    }
+})
+</script>
+</html>
