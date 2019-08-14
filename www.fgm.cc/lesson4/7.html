@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数组练习</title>
+    <style>
+    p{
+        background: #F0F0F0;
+        padding: 15px;
+        color: green;
+        font-size: 12px;
+        border: 1px dotted black;
+    }
+    </style>
+</head>
+<body>
+    <p></p>
+    <button>删除January(1)</button><button>删除December(12)</button>
+    <p></p>
+    <button>复制</button><button>还原</button>
+    <p></p>
+    <button>还原</button><button>删除前三项</button><button>删除第二至第三项</button><button>在第二项后插入(orange,purple)</button><button>替换第二项和第三项</button>
+</body>
+<script>
+const arr1=['January(1)','February(2)','March(3)','April(4)','May(5)','June(6)','July(7)','Aguest(8)','September(9)','October(10)','November(11)','December(12)']
+const arr2=[0,1,2,3,4,5,6,7,8,9]
+const arr3=['red','green','blue','white','yellow','black','brown']
+window.addEventListener('load',function(){
+    let ps=document.getElementsByTagName('p')
+    function setArr(n,arr){
+        ps[n].innerHTML=arr.join(',')
+    }
+    setArr(0,arr1)
+    setArr(1,arr2)
+    setArr(2,arr3)
+    let btns=document.getElementsByTagName('button')
+    btns[0].onclick=function(){
+        let value='January(1)'
+        let index=arr1.indexOf(value)
+        if(index>=0){
+            arr1.splice(index,1)
+            this.innerHTML='添加'+value
+        }else{
+            arr1.unshift(value)
+            this.innerHTML='删除'+value
+        }
+        setArr(0,arr1)
+    }
+    btns[1].onclick=function(){
+        let value='December(12)'
+        let index=arr1.indexOf(value)
+        if(index>=0){
+            arr1.splice(index,1)
+            this.innerHTML='添加'+value
+        }else{
+            arr1.push(value)
+            this.innerHTML='删除'+value
+        }
+        setArr(0,arr1)
+    }
+    btns[2].onclick=function(){//复制
+        let tempArray=ps[1].innerHTML.split(',')
+        setArr(1,tempArray.concat(tempArray))
+    }
+    btns[3].onclick=function(){//还原
+        setArr(1,arr2)
+    }
+    btns[4].onclick=function(){//还原
+        setArr(2,arr3)
+    }
+    btns[5].onclick=function(){//删除前3项
+        let tempArray=ps[2].innerHTML.split(',')
+        tempArray.splice(0,3)
+        setArr(2,tempArray)
+    }
+    btns[6].onclick=function(){//删除第二至第三
+        let tempArray=ps[2].innerHTML.split(',')
+        tempArray.splice(1,2)
+        setArr(2,tempArray)
+    }
+    btns[7].onclick=function(){//在第二项后插入
+        let tempArray=ps[2].innerHTML.split(',')
+        tempArray.splice(2,0,'orange','purple')
+        setArr(2,tempArray)
+    }
+    btns[8].onclick=function(){//在第二项后插入
+        let tempArray=ps[2].innerHTML.split(',')
+        tempArray.splice(1,2,'橘色','紫色')
+        setArr(2,tempArray)
+    }
+})
+</script>
+</html>

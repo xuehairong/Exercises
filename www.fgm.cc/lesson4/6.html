@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: border-box
+        }
+    #outer{
+        width:500px;
+        margin:0 auto;
+        border:2px solid #FF6600
+    }
+    .head{
+        border-bottom: 2px solid #FF6600;
+        height: 35px;
+        line-height: 35px;
+        background: #FFEBD7;
+        padding:0 10px;
+    }
+    .body{
+        /* line-height: 35px; */
+        background: #FEF4EB;
+        padding: 20px;
+    }
+    .group{
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    /* .group::before{
+        content: '';
+        display: table;
+    } */
+    .group::after{
+        clear: both;
+        display: table;
+        content: " ";
+    }
+    label{
+        width: 20%;
+        float: left;
+        text-align: right;
+    }
+    input{
+        background: #FFFDEC;
+        /* border: 2px solid #F4F3E7; */
+        /* border-style: inset */
+        border-color:#DFDED7;
+        height: 30px;
+        width: 80%;
+        border-radius: 3px;
+        float: left;
+    }
+    input:focus{
+        background: pink
+    }
+    button{
+        margin-left: 20%;
+        border:none;
+        background: #FF6600;
+        color: #ffffff;
+        height: 35px;width: 104px;
+        /* word-spacing: 20px; */
+        border-radius: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div class="head">用户登录</div>
+        <div class="body">
+            <div class="group">
+                <label for="username">用户名：</label>
+                <input id="username" type="text">
+            </div>
+            <div class="group">
+                <label for="password">密码：</label>
+                <input id="password" type="text">
+            </div>
+            <button type="submit">登 录</button>
+        </div>
+    </div>
+    <script>
+    // window.addEventListener('load',function(){
+    //     let inputs=document.getElementsByTagName('input')
+    //     for(let i=0;i<inputs.length;i++){
+    //         inputs[i].addEventListener('focus',function(){
+    //             this.style.background='pink'
+    //         })
+    //         inputs[i].addEventListener('blur',function(){
+    //             this.style.background='#FFFDEC'
+    //         })
+    //     }
+    // })
+    </script>
+</body>
+</html>
