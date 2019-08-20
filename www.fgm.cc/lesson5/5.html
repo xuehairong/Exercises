@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跟随鼠标移动(大图展示)</title>
+    <style>
+    #outer{
+        display:flex
+    }
+    #outer div{
+        border:1px solid #eee;
+        margin: 10px;
+        cursor: pointer;
+    }
+    #outer div:hover{
+        border-color:red;
+    }
+    #preview{
+        display: none;
+        position:absolute;
+        border:2px solid #eee;
+    }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div><img src="img/shirt_1.jpg" alt=""></div>
+        <div><img src="img/shirt_2.jpg" alt=""></div>
+        <div><img src="img/shirt_3.jpg" alt=""></div>
+        <div><img src="img/shirt_4.jpg" alt=""></div>
+    </div>
+    <div id="preview"></div>
+    <script>
+    window.addEventListener('load',function(){
+        let outer=document.getElementById('outer')
+        let preview=document.getElementById('preview')
+        outer.addEventListener('mouseover',function(e){
+            let event=e||window.event
+            if(event.target.tagName=='IMG'){
+                preview.innerHTML=''
+                let img=document.createElement('img')
+                img.src=event.target.src.replace('.jpg','_big.jpg')
+                preview.appendChild(img)
+                preview.style.display='block'
+            }
+        })
+        outer.addEventListener('mousemove',function(e){
+            let event=e||window.event
+            if(event.target.tagName=='IMG'){
+                preview.style.left=event.clientX+20+'px'
+                preview.style.top=event.clientY+20+'px'
+            }
+        })
+        outer.addEventListener('mouseout',function(e){
+            let event=e||window.event
+            if(event.target.tagName=='IMG'){
+                preview.style.display='none'
+            }
+        })
+    })
+    </script>
+</body>
+</html>

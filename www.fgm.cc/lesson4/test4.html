@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        box-sizing: border-box
+    }
+    html,body{
+        margin: 0;padding:50px;
+        height: 100%
+    }
+div {
+    width: 500px;
+    height: 200px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    position: relative;
+    overflow: hidden;
+}
+ div::before {
+    height: 110%;
+    border: 1px solid;
+    border-radius: 50%;
+    content: '';
+    width: 40%;
+    position: absolute;
+    left: -28.5%;
+    top: -5%;
+    z-index: 0;
+}
+</style>
+<body>
+    <div>
+        
+    </div>
+</body>
+</html>

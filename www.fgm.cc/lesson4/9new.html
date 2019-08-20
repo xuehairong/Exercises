@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>星级评分系统</title>
+    <style>
+        #star{
+            width: 600px;
+            margin: 0 auto
+        }
+        ul,li{
+            margin: 0;padding: 0;
+            list-style: none;
+        }
+        span,ul,li{
+            float:left
+        }
+        li{
+            float: left;
+            height: 19px;
+            width: 19px;
+            background: url(img/star.png);
+            margin:0 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        .on{
+            background-position: 0 -28px
+        }
+        #tip{
+            display: none;
+            position: absolute;
+            width: 200px;height: 50px;
+            font-size: 12px;
+            top: 40px;
+            background: #eee;
+            border-radius: 5px;
+            padding: 5px 10px;
+            border:1px solid;
+        }
+        #tip::before{
+            content: '';
+            /* content: '◆'; */
+            position: absolute;
+            height: 10px;
+            width: 10px;
+            top: -6px;
+            left:103px;
+            /* font-size: 16px; */
+            background-color: #eee;
+            transform: rotate(45deg);
+            border-left: 1px solid;
+            border-top: 1px solid;  
+        }
+        #tip p{
+            margin:0;padding: 0
+        }
+        #result{
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="star">
+    <span>点击星星就能打分</span>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <span id="result">
+    </span>
+    <div id="tip"></div>
+</div>
+<script>
+    let arr=[{
+        score:'1分',
+        title:'很不满意',
+        content:'差得太离谱，与卖家描述的严重不符，非常不满'
+    },
+    {
+        score:'2分',
+        title:'不满意',
+        content:'部分有破损，与卖家描述的不符，不满意'
+    },
+    {
+        score:'3分',
+        title:'一般',
+        content:'质量一般，没有卖家描述的那么好'
+    },
+    {
+        score:'4分',
+        title:'满意',
+        content:'质量不错，与卖家描述的基本一致，还是挺满意的'
+    },
+    {
+        score:'5分',
+        title:'非常满意',
+        content:'质量非常好，与卖家描述的完全一致，非常满意'
+    }
+    ]
+    let EventUtil={
+        addHandler:function(oElement,sEvent,fnHandler){
+            oElement.addEventListener?oElement.addEventListener(sEvent,fnHandler,false):
+                oElement.attachEvent('on'+sEvent,fnHandler)
+        },
+        removeHandler:function(oElement,sEvent,fnHandler){
+            oElement.removeEventListener?oElement.removeEventListener(sEvent,fnHandler,false):
+                oElement.detachEvent('on'+sEvent,fnHandler)
+        },
+        addLoadHandler:function(fnHandler){
+            this.addHandler(window,'load',fnHandler)
+        }
+    }
+    
+    EventUtil.addLoadHandler(function(){
+        let lis=document.getElementsByTagName('li')
+        let tip=document.getElementById('tip')
+        let result=document.getElementById('result')
+        let score=0,star=0
+        function setScore(s){
+            score=s||star
+            for (i = 0; i < lis.length; i++)  i < score ? lis[i].classList.add("on") : lis[i].classList.remove('on');
+        }
+        for(let i=0;i<lis.length;i++){
+            lis[i].index=i+1;
+            EventUtil.addHandler(lis[i],'mouseover',function(e){
+                setScore(this.index)
+                tip.style.left=this.offsetLeft-100+'px'
+                tip.innerHTML=`<p><span class="score">${arr[this.index-1].score}</span>分 ${arr[this.index-1].title}</p><p class="description">${arr[this.index-1].content}</p>`
+                tip.style.display='block'
+            })
+            EventUtil.addHandler(lis[i],'mouseleave',function(e){
+                setScore()
+                tip.style.display='none'
+            })
+            EventUtil.addHandler(lis[i],'click',function(e){
+                star=this.index
+                tip.style.display='none'
+                result.innerHTML=`<span id="score">${arr[this.index-1].score}分</span>(${arr[this.index-1].content})`
+            })
+        }
+        
+    })
+</script>
+</body>
+</html>

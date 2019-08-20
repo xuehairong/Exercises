@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>完美拖拽</title>
+    <style>
+        *{box-sizing: border-box}
+        body{
+            background-color: #000000
+        }
+        #box{
+            width: 300px;
+            margin: 0 auto;
+            border:2px solid #ffffff;
+            cursor:move;
+            position:absolute;
+            color: white;
+            font-size: 12px;
+        }
+        .title{
+            height: 30px;
+            background-color: #222222;
+            border-bottom: 2px solid #ffffff;
+            text-align: right;
+        }
+        .content{
+            height: 150px;
+            background-color:#333333;
+        }
+        #replay{cursor: pointer;}
+        /* p{margin: 0} */
+    </style>
+</head>
+<body>
+    <div draggable="true" id="box">
+        <div class="title"><a id="replay">点击回放拖动轨迹</a></div>
+        <div class="content">
+            <p>Drag:<span></span></p>
+            <p>offsetTop:<span></span></p>
+            <p>offsetLeft:<span></span></p>
+        </div>
+    </div>
+    <script>
+    window.onload=function(){
+        let box=document.getElementById('box')
+        let spans=box.getElementsByTagName('span')
+        let replay=document.getElementById('replay')
+        let history=[],isDrag=false,disX=disY=0
+        status()
+        box.onmousedown=function(e){
+            let event=e||window.event
+            isDrag=true
+            //获取鼠标拖拽时在box的位置
+            disX=event.clientX-box.offsetLeft
+            disY=event.clientY-box.offsetTop
+        }
+        box.onmousemove=function(e){
+            if(isDrag){
+                let event=e||window.event
+                let maxX=document.documentElement.clientWidth-box.offsetWidth
+                let maxY=document.documentElement.clientHeight-box.offsetHeight
+                //实际移动距离是鼠标的定位减去鼠标在box上的位置
+                let moveX=event.clientX-disX,moveY=event.clientY-disY
+                moveX=moveX<0?0:moveX
+                moveX=moveX>maxX?maxX:moveX
+                moveY=moveY<0?0:moveY
+                moveY=moveY>maxY?maxY:moveY
+                
+                box.style.left=moveX+'px'
+                box.style.top=moveY+'px'
+                history.push({x:moveX,y:moveY})
+                status()
+            }
+        }
+        box.onmouseup=function(){
+            isDrag=false
+            status()
+        }
+        replay.onclick=function(){
+            let timer=setInterval(function(){
+                let position=history.pop()
+                position?(box.style.left=position.x+'px',box.style.top=position.y+'px',status()):clearInterval(timer)
+            },30)
+        }
+        function status(){
+            spans[0].innerHTML=isDrag
+            spans[1].innerHTML=box.offsetTop
+            spans[2].innerHTML=box.offsetLeft
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Div闪烁</title>
+    <style>
+        #box{
+            width: 200px;
+            height: 200px;line-height: 200px;
+            background-color: red;
+            cursor: pointer;
+            color: white;
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+    <div id="box">点击我就闪</div>
+    <script>
+    window.onload=function(){
+        let box=document.getElementById('box')
+        // box.onclick=function(){
+        //     let that=this
+        //     setTimeout(function(){
+        //         that.style.backgroundColor='white'
+        //     },100)
+        //     setTimeout(function(){
+        //         that.style.backgroundColor='red'
+        //     },200)
+        //     setTimeout(function(){
+        //         that.style.backgroundColor='white'
+        //     },300)
+        //     setTimeout(function(){
+        //         that.style.backgroundColor='red'
+        //     },400)
+        // }
+        let timer
+        box.onclick=function(){
+            let i=0
+            clearInterval(timer)
+            timer=setInterval(function(){
+                box.style.display=i++%2?'none':'block';
+                i>6&&(clearInterval(timer))
+            },80)
+        }
+    }
+    
+    </script>
+</body>
+</html>
