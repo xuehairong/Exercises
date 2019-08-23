@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自定义多级右键菜单</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: none;
+            position: absolute;
+            border: 1px solid #979797;
+            background-color: #F1F1F1;
+            box-shadow: 2px 2px 2px rgba(0, 0, 0, .6);
+            padding: 2px;
+        }
+
+        li {
+            padding: 4px 20px;
+            cursor: pointer;
+            font-size: 12px;
+            position: relative;
+        }
+
+        li:hover {
+            background: #f1f3f6;
+            border: 1px solid #aecff7;
+        }
+
+        /* li:hover .sub {
+            display: block
+        } */
+        .sub {
+            top:0
+        }
+    </style>
+</head>
+
+<body>
+    自定义右键菜单，请在页面点击右键查看效果。
+    <ul id="contextMenu">
+        <li>JavaScript学习</li>
+        <li>第一课
+            <ul class="sub">
+                <li>网页特效原理分析</li>
+                <li>网页特效原理分析</li>
+                <li>网页特效原理分析</li>
+                <li>网页特效原理分析</li>
+            </ul>
+        </li>
+        <li>第二课</li>
+        <li>第三课
+            <ul class="sub">
+                <li>javascrip的组成
+                    <ul class="sub">
+                        <li>EMCA script</li>
+                        <li>网页特效原理分析</li>
+                        <li>网页特效原理分析</li>
+                        <li>网页特效原理分析</li>
+                    </ul>
+                </li>
+                <li>网页特效原理分析</li>
+                <li>网页特效原理分析</li>
+                <li>网页特效原理分析</li>
+            </ul>
+        </li>
+    </ul>
+    <script>
+        window.onload = function () {
+            let contextMenu = document.getElementById('contextMenu')
+            document.oncontextmenu = function (e) {
+                let event = e || window.event
+                contextMenu.style.left = event.clientX + 'px'
+                contextMenu.style.top = event.clientY + 'px'
+                contextMenu.style.display = 'block'
+                return false;
+            }
+            document.onclick = function () {
+                contextMenu.style.display = 'none'
+            }
+            contextMenu.onmouseover = function (e) {
+                let event = e || window.event
+                if (event.target.tagName == 'LI') {
+                    let sub = event.target.getElementsByClassName('sub')[0]
+                    if (sub) {
+                        sub.style.left = event.target.offsetWidth + 'px'
+                        sub.style.display = 'block'
+                    }
+                }
+            }
+            contextMenu.onmouseout=function (e) {
+                let event = e || window.event
+                if (event.target.tagName == 'LI') {
+                    let sub = event.target.getElementsByClassName('sub')[0]
+                    sub&&(sub.style.display='none')
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

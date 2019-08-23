@@ -22,16 +22,20 @@
             border:1px solid #ccc;
             /* display:none */
             opacity:0;
+            transition: opacity 2s;/* 应该用这种过度效果而不是下面的动画*/
+        }
+        img.current{
+            opacity: 1;
         }
         /*动画效果*/
-        @keyframes fadeIn {
+        /* @keyframes fadeIn {
             from { opacity:0;}
             to { opacity:1;}
         }
         img.current{
             animation:fadeIn 3s infinite;
             -webkit-animation:fadeIn 3s infinite;
-        }
+        } */
         ul,li{margin: 0;padding: 0;list-style:none;}
         ul{
             position:absolute;

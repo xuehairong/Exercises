@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仿腾讯微博效果</title>
+</head>
+<style>
+    * {
+        box-sizing: border-box
+    }
+
+    body {
+        background-color: #3C3A3B
+    }
+    
+    #outer {
+        width: 500px;
+        margin: 0 auto;
+        border-radius: 4px;
+        background-color: #ffffff;
+    }
+
+    h3,
+    ul,
+    li {
+        padding: 0;
+        margin: 0;
+    }
+
+    h3 {
+        font-weight: normal
+    }
+
+    ul {
+        list-style: none;
+        float: left;
+    }
+
+    li {
+        float: left;
+    }
+
+    li img {
+        height: 30px;
+        border-radius: 4px;
+        opacity: 0.5;
+        cursor: pointer;
+    }
+    li img:hover,.selected{
+        opacity: 1;
+        border: 1px solid red;
+    }
+
+    li+li {
+        margin-left: 6px;
+    }
+    .head{
+        padding: 10px 20px;
+        border-radius: 4px 4px 0 0;
+        background:linear-gradient(#ffffff 20%,#F0F0F0 80%)
+    }
+    .head div{
+        margin-top: 10px;
+    }
+    #name {
+        float: left;
+        height: 30px;width: 150px;
+        border-radius: 4px;
+        margin-right: 20px;
+        border:1px solid #d0d0d0
+    }
+    #name:focus,#content:focus{
+        border-color: #7abb2c
+    }
+
+    #content {
+        width: 100%;
+        height: 80px;
+        border-radius: 4px;
+        border:1px solid #d0d0d0;
+        padding: 3px 5px;
+    }
+
+    #send {
+        text-align: right;
+        color: #999;
+        font-size: 12px;
+    }
+    #send #maxWords{
+        font: 26px/30px Georgia, Tahoma, Arial;
+        padding: 0 5px;
+    }
+    #send button{
+        padding: 2px 30px;
+        font-size: 18px;
+        color: white;
+        background: #84C221;
+        border-radius: 6px;
+        border-color:#B4D866;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    #send button:hover{
+        background: linear-gradient(#95C85C,#86C31F,#B0DC43)
+    }
+    .body{
+        padding: 10px;
+    }
+
+    .list-top {
+        height: 40px;
+        background-color: #e3eaec;
+        position: relative;
+
+    }
+
+    .list-top div {
+        position: absolute;
+        background-color: #ffffff;
+        top: 10px;
+        left: 10px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .list {
+        display: flex;
+        padding: 10px;
+    }
+    .list.new{
+        animation:fadeIn 3s;
+        -webkit-animation:fadeIn 3s;
+    }
+    /* .list.delete{
+        animation:fadeOut 4s;
+        -webkit-animation:fadeOut 4s;
+    } */
+    /*动画效果*/
+    @keyframes fadeIn {
+        from { opacity:0;height:0}
+        to { opacity:1;height:100%}
+    }
+    /* @keyframes fadeOut {
+        from { opacity:1;}
+        to { opacity:0;height:0}
+    } */
+    .list+.list {
+        border-top: 2px dotted #eee
+    }
+    .list:hover{
+        background-color: #F0F0F0
+    }
+
+
+    .headImage img {
+        border-radius: 4px;
+        border: 1px solid #eee;
+        margin-right: 10px;
+    }
+    .post{width: 80%}
+    .post .postContent {
+        font-size: 14px;
+        
+    }
+
+    .post .postDate {
+        font-size: 12px;
+        margin: 10px 0;
+        color: #88A9CE;
+    }
+    .post .postDate .delete{
+        display: none;
+        float:right;
+        text-decoration: none;
+        color: #889db6
+    }
+    .list:hover .delete{
+        display: inline
+    }
+    .clearfix::after{
+        content: '';
+        display:block;
+        clear: both;
+    }
+</style>
+
+<body>
+    <div id="outer">
+        <form class="head">
+            <h3>来，说说你再做什么，想什么</h3>
+            <div class="clearfix"><input type="text" id="name">
+                <ul>
+                    <li><img class="selected" src="img/face1.gif" alt=""></li>
+                    <li><img src="img/face2.gif" alt=""></li>
+                    <li><img src="img/face3.gif" alt=""></li>
+                    <li><img src="img/face4.gif" alt=""></li>
+                    <li><img src="img/face5.gif" alt=""></li>
+                    <li><img src="img/face6.gif" alt=""></li>
+                    <li><img src="img/face7.gif" alt=""></li>
+                    <li><img src="img/face8.gif" alt=""></li>
+                </ul>
+            </div>
+            <div>
+                <textarea name="" id="content" rows="10"></textarea>
+            </div>
+            <div id="send"><span id="outertext">还能输入</span><span id="maxWords">140</span>个字<button title="快捷键 Ctrl+Enter">广 播</button></div>
+        </form>
+        
+
+        <div class="body">
+            <div class="list-top">
+                <div>大家在说</div>
+            </div>
+            <div class="list">
+                <div class="headImage"><img src="img/face.gif" alt=""></div>
+                <div class="post">
+                    <div class="postContent"><span class="postName">日丶久生情：</span>新增删除广播功能。</div>
+                    <div class="postDate"><span>07月05日 15:14</span> <a class="delete" href="javascript:;">删除</a></div>
+                </div>
+            </div>
+            <div class="list">
+                <div class="headImage"><img src="img/face.gif" alt=""></div>
+                <div class="post">
+                    <div class="postContent"><span class="postName">日丶久生情：</span> 新增Ctrl+Enter快捷键发送广播。</div>
+                    <div class="postDate"><span>07月05日 15:14</span> <a class="delete" href="javascript:;">删除</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+window.onload=function(){
+    let ul=document.getElementsByTagName('ul')[0]
+    let imgs=ul.getElementsByTagName('img')
+    let send=document.getElementById('send')
+    let name=document.getElementById('name')
+    let content=document.getElementById('content')
+    let body=document.getElementsByClassName('body')[0]
+    let form=document.getElementsByTagName('form')[0]
+    let maxWords=document.getElementById('maxWords')
+    let outertext=document.getElementById('outertext')
+    let selectedImg='img/face1.gif',canSend=true
+    ul.onclick=function(e){
+        let event=e||window.event
+        if(event.target.tagName=='IMG'){//头像图片的点击选中效果
+            for(let i=0;i<imgs.length;i++){
+                imgs[i].classList.remove('selected')
+            }
+            event.target.classList.add('selected')
+            selectedImg=event.target.src//保存当前选中的图片
+        }
+    }
+    send.onclick=function(e){
+        let event=e||window.event
+        event.preventDefault();//阻止按钮默认提交
+        if(name.value&&content.value&&canSend){
+            let firstList=body.getElementsByClassName('list')[0]//文章列表的第一个
+            let now=new Date()
+            let date=`${format(now.getMonth()+1)}月${format(now.getDate())}日 ${format(now.getHours())}:${format(now.getMinutes())}`
+            let newNode=document.createElement('div'),originHeight,timer
+            newNode.className='list new'
+            newNode.innerHTML=`
+                    <div class="headImage"><img src="${selectedImg}" alt=""></div>
+                    <div class="post">
+                        <div class="postContent"><span class="postName">${name.value}：</span>${content.value}</div>
+                        <div class="postDate"><span>${date}</span> <a class="delete" href="javascript:;">删除</a></div>
+                    </div>`
+            
+            body.insertBefore(newNode,firstList)
+            form.reset()
+            //下面是通过js实现动画，现在是通过css3实现的
+            // originHeight=newNode.offsetHeight//先将元素插入才能获取高度
+            // newNode.style.opacity=0
+            // newNode.style.height=0//然后将高度和透明度隐藏
+            // timer=setInterval(function(){
+            //     let height=newNode.offsetHeight
+            //     if(height<originHeight){
+            //         newNode.style.height=height+8+'px'//先逐步增加高度
+            //     }else{
+            //         clearInterval(timer)//高度增加完了，再逐步增加透明度
+
+            //         timer=setInterval(function(){
+            //             let opacity=newNode.style.opacity
+            //             opacity<1?newNode.style.opacity=0.1+parseFloat(opacity):clearInterval(timer)
+            //         },30)
+            //     }
+            // },30)
+
+        }else if(!name.value){
+            alert('请填写姓名')
+        }else if(!content.value){
+            alert('随便说点什么吧')
+        }
+    }
+    body.onclick=function(e){
+        let event=e||window.event
+        if(event.target.tagName=='A'){
+            let listNode=event.target.parentNode.parentNode.parentNode
+            listNode.classList.add('delete')
+            // body.removeChild(listNode)
+            // 下面是通过js实现动画，现在是通过css3实现的----不会css
+            listNode.style.opacity=1//先把元素透明度设为1
+            let timer,opacity,height
+            timer=setInterval(function(){
+                opacity=listNode.style.opacity
+                if(opacity>0){
+                    listNode.style.opacity=parseFloat(opacity)-0.1//先逐步减少透明度
+                }else{
+                    clearInterval(timer)
+                    timer=setInterval(function(){//等透明度为0了再逐步减少高度
+                        height=listNode.offsetHeight
+                        height>20?listNode.style.height=height-8+'px':(clearInterval(timer),body.removeChild(listNode))
+                    },30)
+                }
+            },30)
+            
+        }
+    }
+    document.onkeyup=function(e){
+        let event=e||window.event
+        e.ctrlKey&&e.keyCode==13&&send.onclick()
+    }
+    content.onkeyup=function(e){
+        let remainWords=140-this.value.length
+        remainWords>=0?(outertext.innerHTML='还能输入',maxWords.innerHTML=remainWords,maxWords.style='',canSend=true):
+            (outertext.innerHTML='已超出',maxWords.innerHTML=0-remainWords,maxWords.style.color='red',canSend=false)
+    }
+    content.onkeyup()
+    //格式化时间, 如果为一位数时补0
+	function format(str)
+	{
+		return str.toString().replace(/^(\d)$/,"0$1")
+	}
+}
+</script>
+</body>
+
+</html>
