@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>带Loading效果的图片切换</title>
+    <style>
+    body{
+        background-color: #000000
+    }
+    #outer{
+        width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+        min-height: 400px;
+    }
+    #outer.loading{background:url(img/loading.gif) 50% 50% no-repeat;}
+    #title{
+        position:absolute;
+        width: 100%;
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.7);
+        font-size: 20px;
+        height: 0;
+    }
+    /*动画效果*/
+    @keyframes fadeIn {
+        from { height:0;line-height: 0}
+        to { height:50px;line-height: 50px}
+    }
+    #title.animation{
+        animation:fadeIn 1s;
+        -webkit-animation:fadeIn 1s;
+        height:50px;line-height: 50px
+    }
+    #span{
+        opacity: 0;
+    }
+    /*动画效果*/
+    @keyframes spanFadeIn {
+        from { opacity:0;}
+        to { opacity:1}
+    }
+    #span.animation{
+        animation:spanFadeIn 1s;
+        -webkit-animation:spanFadeIn 1s;
+        opacity:1;
+    }
+    #outer img{
+        max-width: 100%;
+    }
+    #left{
+        height: 100%;
+        width: 50%;
+        position: absolute;
+        cursor: pointer;
+    }
+    #right{
+        height: 100%;
+        width: 50%;
+        position: absolute;
+        right: 0;
+        cursor: pointer;
+    }
+    #left_arrow{
+        height:80px ;
+        width: 39px;
+        position:absolute;
+        top:50%;left: 10px;
+        background-image: url(img/btn.png);
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    #right_arrow{
+        height:80px ;
+        width: 39px;
+        position:absolute;
+        top:50%;right: 10px;
+        background-image: url(img/btn.png);
+        background-position-x: 39px;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    #left:hover #left_arrow,#right:hover #right_arrow{
+        opacity: 1;
+    }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="title"><span id="span"></span></div>
+        <div id="left"><div id="left_arrow"></div></div>
+        <div id="right"><div id="right_arrow"></div></div>
+        <img src="" alt="">
+    </div>
+</body>
+<script>
+let data=[{title:"7月26日，吊车将事故现场的车头残片吊至大型运输车辆上。",url:"http://img1.gtimg.com/news/pics/hv1/106/238/825/53706421.jpg"},
+            {title:"7月26日，一辆大卡车准备驶离事故现场。",url:"http://img1.gtimg.com/news/pics/hv1/105/238/825/53706420.jpg"},
+            {title:"7月26日，工人在给最后一节车厢盖上彩条布，准备运离现场。",url:"http://img1.gtimg.com/news/pics/hv1/101/238/825/53706416.jpg"},
+            {title:"7月26日，一名工人在事故现场最后一节车厢上作业。",url:"http://img1.gtimg.com/news/pics/hv1/99/238/825/53706414.jpg"},
+            {title:"7月26日，工人在给最后一节车厢盖上彩条布，准备运离现场。",url:"http://img1.gtimg.com/news/pics/hv1/100/238/825/53706415.jpg"},
+        ]
+window.onload=function(){
+    let index=0,leftArrow=document.getElementById('left_arrow'),timer
+        rightArrow=document.getElementById('right_arrow'),
+        img=document.getElementsByTagName('img')[0],
+        title=document.getElementById('title'),
+        span=document.getElementById('span'),
+        outer=document.getElementById('outer')
+        show()
+    leftArrow.onclick=function(){
+        if(index==0){
+            alert('已经是第一张')
+            return false
+        }else{
+            index--
+            show()
+        }
+    }
+    rightArrow.onclick=function(){
+        if(index==data.length-1){
+            alert('已经是最后一张')
+            return false
+        }else{
+            index++
+            show()
+        }
+    }
+    function show(){
+        clearTimeout(timer)
+        title.classList.remove('animation')//去掉标题高度动画
+        span.classList.remove('animation')//去掉标题文字淡入动画
+        outer.classList.add('loading')//先显示loading
+        span.innerHTML=data[index].title
+        let newImg=new Image()
+        newImg.onload=function(){
+            outer.classList.remove('loading')//图片加载好后去掉loading
+            img.src=this.src
+            title.classList.add('animation')//先执行标题高度动画
+            timer=setTimeout(function(){
+                span.classList.add('animation')//1s后执行文字淡入动画
+            },1000)
+        }
+        newImg.src=data[index].url
+        
+        
+        
+    }
+}
+</script>
+</html>
