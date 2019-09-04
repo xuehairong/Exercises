@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>移动效果(按轨迹移动)</title>
+    <style>
+    #people{
+        position:absolute;
+        left: 20px;
+        top: 100px;
+    }
+    </style>
+</head>
+<body>
+    <p><button>根据鼠标点击位置移动</button>
+        <button>根据鼠标轨迹移动</button></p>
+    <p id="desciption">请点击按钮激活功能!</p>
+    <div id="people"><img src="img/1.gif" alt=""></div>
+</body>
+<script>
+let eventUtil={
+    addHandler:function(oElement,sEvent,fnHandler){
+        oElement.addEventListener?oElement.addEventListener(sEvent,fnHandler,false):
+            oElement.attachEvent('on'+sEvent,fnHandler)
+    },
+    removeHandler:function(oElement,sEvent,fnHandler){
+        oElement.removeEventListener?oElement.removeEventListener(sEvent,fnHandler,false):
+            oElement.dettachEvent('on'+sEvent,fnHandler)
+    }
+}
+eventUtil.addHandler(window,'load',function(){
+    let buttons=document.getElementsByTagName('button'),
+        desciption=document.getElementById('desciption'),
+        people=document.getElementById('people'),moveTimer,
+        img=people.getElementsByTagName('img')[0],moveData=[]
+    eventUtil.addHandler(buttons[0],'click',function(e){
+        let event=e||window.event
+        event.stopPropagation();
+        this.innerHTML=buttons[0].innerHTML.replace('(已激活)','')+'(已激活)'
+        buttons[1].innerHTML=buttons[1].innerHTML.replace('(已激活)','')
+        desciption.innerHTML='鼠标点击页面，任务将移动至鼠标位置!'
+        eventUtil.addHandler(document,'click',clickToMove)
+    })
+    eventUtil.addHandler(buttons[1],'click',function(e){
+        let event=e||window.event
+        event.stopPropagation();
+        this.innerHTML=buttons[0].innerHTML.replace('(已激活)','')+'(已激活)'
+        buttons[0].innerHTML=buttons[0].innerHTML.replace('(已激活)','')
+        desciption.innerHTML='按住鼠标左键，在页面滑动，任务将按照鼠标轨迹移动!'
+        eventUtil.removeHandler(document,'click',clickToMove)//解绑点击移动事件
+        eventUtil.addHandler(document,'mousedown',fnMousedown)//添加鼠标down事件
+        eventUtil.addHandler(document,'mouseup',fnMouseup)//添加鼠标up事件
+    })
+    function clickToMove(e){
+        clearInterval(moveTimer)//先清空，防止上一次还没执行完
+        let event=e||window.event
+        img.src='img/2.gif'
+        moveTimer=setInterval(function(){
+            let iX=(e.clientX-people.offsetLeft)/5,iY=(e.clientY-people.offsetTop)/5
+            iX=iX?Math.ceil(iX):Math.floor(iX)
+            iY=iY?Math.ceil(iY):Math.floor(iY)
+            // if(e.clientX==people.offsetLeft&&e.clientY==people.offsetTop){
+            if(iX==0&&iY==0){
+                clearInterval(moveTimer)
+                img.src='img/1.gif'
+            }else{
+                people.style.left=people.offsetLeft+iX+'px'
+                people.style.top=people.offsetTop+iY+'px'
+            }
+        },30)
+    }
+    function fnMousedown(e){//鼠标down时添加move记录移动轨迹监听
+        moveData=[]//清空轨迹数组
+        eventUtil.addHandler(document,'mousemove',fnMousemove)
+    }
+    function fnMouseup(e){//鼠标up时，移除move的监听，并根据轨迹数组，移动图片
+        eventUtil.removeHandler(document,'mousemove',fnMousemove)
+        img.src='img/2.gif'
+        moveTimer=setInterval(function(){
+            if(moveData.length>0){
+                people.style.left=moveData[0].x+'px'
+                people.style.top=moveData[0].y+'px'
+                moveData.shift()
+            }else{
+                clearInterval(moveTimer)
+                img.src='img/1.gif'
+            }
+            
+        },30)
+    }
+    function fnMousemove(e){
+        let event=e||window.event
+        moveData.push({x:e.clientX,y:e.clientY})
+    }
+})
+
+</script>
+</html>
