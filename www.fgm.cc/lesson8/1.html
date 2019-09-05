@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IPhone手机解锁效果</title>
+    <style>
+    #outer{
+        width: 426px;height: 640px;
+        margin: 0 auto;
+        background-image: url(img/1.jpg);
+        position: relative;
+    }
+    #btn{
+        width: 93px;height: 62px;
+        background-image: url(img/btn.jpg);
+        position:absolute;
+        left: 34px;bottom: 33px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="btn"></div>
+    </div>
+</body>
+<script>
+window.onload=function(){
+    let outer=document.getElementById('outer'),
+        btn=document.getElementById('btn'),
+        beginX,//记录移动开始位置
+        timer
+    btn.onmousedown=function(event){
+        clearInterval(timer)
+        let e=event||window.event
+        beginX=e.clientX//鼠标放在按钮上时记录鼠标当前位置
+        outer.onmousemove=function(event){
+            let e=event||window.event,moveDistance=e.clientX-beginX //移动的位置-上一个位置，得到鼠标移动的距离
+            if(btn.offsetLeft+moveDistance>300){//拖到最右边时
+                // console.log(btn.offsetLeft,moveDistance,1)
+                open()
+            }else if(btn.offsetLeft+moveDistance<34){//如果拖到最左边，就不能再拖了
+                // console.log(btn.offsetLeft,moveDistance,2)
+                btn.style.left='34px'
+            }else{
+                // console.log(btn.offsetLeft,moveDistance,3)
+                btn.style.left=btn.offsetLeft+moveDistance+'px'//让按钮移动的距离跟鼠标移动的距离一致
+                beginX+=moveDistance //起始位置要不断改变
+            }
+            
+        }
+    }
+    outer.onmouseup=function(){
+        if(btn.offsetLeft<=160){
+            timer=setInterval(() => {
+                if(btn.offsetLeft-10<=34){
+                    clearInterval(timer)
+                    btn.style.left='34px'
+                }else{
+                    btn.style.left=btn.offsetLeft-10+'px'
+                }
+            }, 30);
+        }else{
+            timer=setInterval(() => {
+                if(btn.offsetLeft+10>=300){
+                    clearInterval(timer)
+                    btn.style.left='300px'
+                    open()
+                }else{
+                    btn.style.left=btn.offsetLeft+10+'px'
+                }
+            }, 30);
+        }
+        this.onmousemove=''
+    }
+    function open(){
+        btn.style.display='none'
+        outer.style.backgroundImage='url(img/2.jpg)'
+    }
+}
+</script>
+</html>
