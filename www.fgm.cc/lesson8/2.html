@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自定义滚动条</title>
+    <style>
+        body{
+            background-color: #3E3E3E
+        }
+        #outer{
+            width: 600px;
+            margin: 0 auto;
+        }
+        #imgList{
+            width: 600px;
+            display:flex;
+            overflow: hidden;
+        }
+        .imgBox{
+            background-color: #000000;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .imgBox .text{
+            color: white;
+            margin-top: 10px;
+        }
+        .imgBox + .imgBox{
+            margin-left: 8px;
+        }
+        img{
+            display:block;
+            border-radius: 8px;
+        }
+
+        #scroll{
+            height: 19px;
+            display: flex;
+            margin-top: 10px;
+        }
+        #scroll .leftArrow{
+            width: 26px;height: 100%;
+            background-image: url(img/scroll/03.gif)
+        }
+        #scroll .barBox{
+            width: calc(100% - 26px * 2);
+            height: 17px;
+            background-color: #0A0A0A;
+            border: 1px solid #545454;
+            border-width: 1px 0;
+            position: relative;
+        }
+        #scroll .rightArrow{
+            width: 26px;height: 100%;
+            background-image: url(img/scroll/03.gif);
+            background-position: 26px 0
+        }
+        #scroll .bar{
+            position:absolute;top:1px;left:-5px;
+            height: 15px;width: 150px;
+            background-image:linear-gradient(#777777,#7D7D7D,#8B8B8B);
+            border-radius: 10px;
+            cursor: e-resize;
+        }
+        #description{
+            color: #CCCCCC;
+            border: 1px dashed #666666;
+            font-size: 14px;
+            padding: 10px;
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="imgList">
+            <div class="imgBox"><img src="img/scroll/1.jpg" alt=""><div class="text">iPhone 4</div></div>
+            <div class="imgBox"><img src="img/scroll/2.jpg" alt=""><div class="text">iPad 2</div></div>
+            <div class="imgBox"><img src="img/scroll/3.jpg" alt=""><div class="text">iPod touch</div></div>
+            <div class="imgBox"><img src="img/scroll/4.jpg" alt=""><div class="text">iPod classic</div></div>
+            <div class="imgBox"><img src="img/scroll/5.jpg" alt=""><div class="text">iPod shuffle</div></div>
+            <div class="imgBox"><img src="img/scroll/6.jpg" alt=""><div class="text">iPod nano</div></div>
+            <div class="imgBox"><img src="img/scroll/7.jpg" alt=""><div class="text">MacBook Air</div></div>
+            <div class="imgBox"><img src="img/scroll/8.jpg" alt=""><div class="text">MacBook Pro</div></div>
+            <div class="imgBox"><img src="img/scroll/9.jpg" alt=""><div class="text">MacBook mini</div></div>
+            <div class="imgBox"><img src="img/scroll/10.jpg" alt=""><div class="text">Mac Pro</div></div>
+        </div>
+        <div id="scroll">
+            <div class="leftArrow"></div>
+            <div class="barBox"><div class="bar"></div></div>
+            <div class="rightArrow"></div>
+        </div>
+        <dl id="description">
+            <dt>功能说明：</dt>
+            <dd>① 拖动滚动条，图片列表缓冲滑动至目标点；</dd>
+            <dd>② 滚动条两端鼠标移入自动滑动；</dd>
+            <dd>③ 滚动条滑动到两端自动更换为停止标识；</dd>
+            <dd>④ 点击滚动条黑色背景区，滚动条及图片列表缓冲滑动至目标点；</dd>
+            <dd>⑤ 支持键盘左右键；</dd>
+            <dd>⑥ 支持鼠标滚轮。</dd>
+        </dl>
+    </div>
+</body>
+<script>
+window.onload=function(){
+    let outer=document.getElementById('outer'),
+    scroll=document.getElementById('scroll'),
+        barBox=scroll.getElementsByClassName('barBox')[0],
+        bar=scroll.getElementsByClassName('bar')[0],
+        imgList=document.getElementById('imgList'),
+        beginX,percent,
+        accDistance=0//累计拖动距离
+    bar.onmousedown=function(event){
+        let e=event||window.event
+        beginX=e.clientX
+        document.onmousemove=function(event){
+            let e=event||window.event,
+                distanceX=e.clientX-beginX
+            accDistance+=distanceX
+            bar.style.left=bar.offsetLeft+distanceX+'px'
+            //按钮距离左边的距离/（容器的距离-按钮本身的距离）就能计算出按钮拖动了百分之几
+            percent=bar.offsetLeft/(barBox.offsetWidth-bar.offsetWidth)
+            // console.log(bar.offsetLeft,barBox.offsetWidth-bar.offsetWidth,percent)
+            //隐藏部分的宽度（所有宽度-显示部分的宽度）再乘以百分比，就可以跟着滚动条移动的位置进行滚动了
+            imgList.scrollLeft=(imgList.scrollWidth-imgList.offsetWidth)*percent
+            beginX+=distanceX
+        }
+    }
+    document.onmouseup=function(){
+        this.onmousemove=''
+    }
+}
+</script>
+</html>
