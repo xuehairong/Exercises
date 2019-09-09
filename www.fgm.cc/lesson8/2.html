@@ -43,7 +43,7 @@
         }
         #scroll .leftArrow{
             width: 26px;height: 100%;
-            background-image: url(img/scroll/03.gif)
+            background-image: url(img/scroll/03.gif);
         }
         #scroll .barBox{
             width: calc(100% - 26px * 2);
@@ -52,6 +52,7 @@
             border: 1px solid #545454;
             border-width: 1px 0;
             position: relative;
+            cursor: pointer;
         }
         #scroll .rightArrow{
             width: 26px;height: 100%;
@@ -110,28 +111,97 @@ window.onload=function(){
     scroll=document.getElementById('scroll'),
         barBox=scroll.getElementsByClassName('barBox')[0],
         bar=scroll.getElementsByClassName('bar')[0],
+        leftArrow=scroll.getElementsByClassName('leftArrow')[0],
+        rightArrow=scroll.getElementsByClassName('rightArrow')[0],
         imgList=document.getElementById('imgList'),
-        beginX,percent,
-        accDistance=0//累计拖动距离
+        beginX=0,percent,moveTimer
     bar.onmousedown=function(event){
         let e=event||window.event
         beginX=e.clientX
         document.onmousemove=function(event){
-            let e=event||window.event,
-                distanceX=e.clientX-beginX
-            accDistance+=distanceX
-            bar.style.left=bar.offsetLeft+distanceX+'px'
-            //按钮距离左边的距离/（容器的距离-按钮本身的距离）就能计算出按钮拖动了百分之几
-            percent=bar.offsetLeft/(barBox.offsetWidth-bar.offsetWidth)
-            // console.log(bar.offsetLeft,barBox.offsetWidth-bar.offsetWidth,percent)
-            //隐藏部分的宽度（所有宽度-显示部分的宽度）再乘以百分比，就可以跟着滚动条移动的位置进行滚动了
-            imgList.scrollLeft=(imgList.scrollWidth-imgList.offsetWidth)*percent
-            beginX+=distanceX
+            let e=event||window.event,distanceX=e.clientX-beginX
+            move(distanceX)
         }
     }
     document.onmouseup=function(){
         this.onmousemove=''
     }
+    barBox.onclick=function(event){
+        let e=event||window.event
+        beginX=bar.offsetLeft+bar.offsetWidth/2
+        move((e.clientX-barBox.offsetLeft)-beginX)
+    }
+    function move(distanceX,fnCancel){
+        if(bar.offsetLeft+distanceX<-4){//滚动条的起始位置是-4，所以要算上这个距离
+                console.log(1)
+                bar.style.left='-4px'//把光标移到最左边
+                imgList.scrollLeft=imgList.offsetWidth//把图片列表移到最左边
+                leftArrow.style.backgroundPositionY='19px'
+                leftArrow.style.cursor=''
+                fnCancel&&fnCancel()
+            }else if(bar.offsetLeft+distanceX+bar.offsetWidth>barBox.offsetWidth){
+                console.log(2   )
+                bar.style.left=barBox.offsetWidth-bar.offsetWidth+4+'px'//把光标移到最右边
+                imgList.scrollLeft=imgList.scrollWidth-imgList.offsetWidth//把图片列表移到最右边
+                rightArrow.style.backgroundPositionY='19px'
+                rightArrow.style.cursor=''
+                fnCancel&&fnCancel()
+            }else{
+                bar.style.left=bar.offsetLeft+distanceX+'px'
+                //按钮距离左边的距离/（容器的距离-按钮本身的距离）就能计算出按钮拖动了百分之几
+                percent=bar.offsetLeft/(barBox.offsetWidth-bar.offsetWidth)
+                // console.log(bar.offsetLeft,barBox.offsetWidth-bar.offsetWidth,percent)
+                //隐藏部分的宽度（所有宽度-显示部分的宽度）再乘以百分比，就可以跟着滚动条移动的位置进行滚动了
+                imgList.scrollLeft=(imgList.scrollWidth-imgList.offsetWidth)*percent
+                beginX+=distanceX
+
+                leftArrow.style.backgroundPositionY=''
+                leftArrow.style.cursor='pointer'
+                rightArrow.style.backgroundPositionY=''
+                rightArrow.style.cursor='pointer'
+            }
+    }
+    function overMove(distanceX){
+        clearInterval(moveTimer)
+        moveTimer=setInterval(function(){
+            move(distanceX,()=>clearInterval(moveTimer))
+        },30)
+    }
+    rightArrow.onmouseover=function(){
+        overMove(4)
+    }
+    rightArrow.onmouseout=function(){
+        clearInterval(moveTimer)
+    }
+    leftArrow.onmouseover=function(){
+        overMove(-4)
+    }
+    leftArrow.onmouseout=function(){
+        clearInterval(moveTimer)
+    }
+    document.onkeydown=function(event){
+        let e=event||window.event
+        if(e.keyCode==39){
+            overMove(4)
+        }else if(e.keyCode==37){
+            overMove(-4)
+        }
+    }
+    document.onkeyup=function(){
+        clearInterval(moveTimer)
+    }
+    barBox.onmouseover=function(){
+        this.onmousewheel=function(event){
+            let e=event||window.event
+            alert(e.wheelDelta)
+        }
+        this.onDOMMouseScroll=function(event){
+            let e=event||window.event
+            alert(e.detail)
+        }
+    }
+    
+    
 }
 </script>
 </html>
