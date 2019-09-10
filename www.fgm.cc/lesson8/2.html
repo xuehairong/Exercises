@@ -94,16 +94,16 @@
             <div class="barBox"><div class="bar"></div></div>
             <div class="rightArrow"></div>
         </div>
-        <dl id="description">
-            <dt>功能说明：</dt>
-            <dd>① 拖动滚动条，图片列表缓冲滑动至目标点；</dd>
-            <dd>② 滚动条两端鼠标移入自动滑动；</dd>
-            <dd>③ 滚动条滑动到两端自动更换为停止标识；</dd>
-            <dd>④ 点击滚动条黑色背景区，滚动条及图片列表缓冲滑动至目标点；</dd>
-            <dd>⑤ 支持键盘左右键；</dd>
-            <dd>⑥ 支持鼠标滚轮。</dd>
-        </dl>
     </div>
+    <dl id="description">
+        <dt>功能说明：</dt>
+        <dd>① 拖动滚动条，图片列表缓冲滑动至目标点；</dd>
+        <dd>② 滚动条两端鼠标移入自动滑动；</dd>
+        <dd>③ 滚动条滑动到两端自动更换为停止标识；</dd>
+        <dd>④ 点击滚动条黑色背景区，滚动条及图片列表缓冲滑动至目标点；</dd>
+        <dd>⑤ 支持键盘左右键；</dd>
+        <dd>⑥ 支持鼠标滚轮。</dd>
+    </dl>
 </body>
 <script>
 window.onload=function(){
@@ -115,6 +115,11 @@ window.onload=function(){
         rightArrow=scroll.getElementsByClassName('rightArrow')[0],
         imgList=document.getElementById('imgList'),
         beginX=0,percent,moveTimer
+    //初始化（为了解决滑到右边时，刷新，还在右边）
+    imgList.scrollLeft=imgList.offsetWidth//把图片列表移到最左边
+    leftArrow.style.backgroundPositionY='19px'//默认为暂停图标
+
+
     bar.onmousedown=function(event){
         let e=event||window.event
         beginX=e.clientX
@@ -131,16 +136,17 @@ window.onload=function(){
         beginX=bar.offsetLeft+bar.offsetWidth/2
         move((e.clientX-barBox.offsetLeft)-beginX)
     }
+    bar.onclick=function(event){
+        (event||window.event).cancelBubble=true
+    }
     function move(distanceX,fnCancel){
         if(bar.offsetLeft+distanceX<-4){//滚动条的起始位置是-4，所以要算上这个距离
-                console.log(1)
                 bar.style.left='-4px'//把光标移到最左边
                 imgList.scrollLeft=imgList.offsetWidth//把图片列表移到最左边
                 leftArrow.style.backgroundPositionY='19px'
                 leftArrow.style.cursor=''
                 fnCancel&&fnCancel()
             }else if(bar.offsetLeft+distanceX+bar.offsetWidth>barBox.offsetWidth){
-                console.log(2   )
                 bar.style.left=barBox.offsetWidth-bar.offsetWidth+4+'px'//把光标移到最右边
                 imgList.scrollLeft=imgList.scrollWidth-imgList.offsetWidth//把图片列表移到最右边
                 rightArrow.style.backgroundPositionY='19px'
@@ -167,38 +173,41 @@ window.onload=function(){
             move(distanceX,()=>clearInterval(moveTimer))
         },30)
     }
-    rightArrow.onmouseover=function(){
-        overMove(4)
+    rightArrow.onmouseover=leftArrow.onmouseover=document.onkeydown=function(event){
+        event=event||window.event
+        let iSpeed=0
+        if(this==rightArrow||event.keyCode==39){
+            iSpeed=4
+        }else if(this==leftArrow||event.keyCode==37){
+            iSpeed=-4
+        }
+        overMove(iSpeed)
     }
-    rightArrow.onmouseout=function(){
+    rightArrow.onmouseout=leftArrow.onmouseout=document.onkeyup=function(){
         clearInterval(moveTimer)
     }
-    leftArrow.onmouseover=function(){
-        overMove(-4)
+    function addHandler(element, type, handler)
+    {
+        return element.addEventListener ? element.addEventListener(type, handler, false) : element.attachEvent("on" + type, handler)
     }
-    leftArrow.onmouseout=function(){
-        clearInterval(moveTimer)
+    function removeHandler(element,type,handler){
+        return element.removeEventListener?element.removeEventListener(type,handler,false):element.detachEvent("on"+type,handler)
     }
-    document.onkeydown=function(event){
-        let e=event||window.event
-        if(e.keyCode==39){
-            overMove(4)
-        }else if(e.keyCode==37){
-            overMove(-4)
+    function mouseWheel(event){
+            event=event||window.event
+            let delta=event.wheelDelta?event.wheelDelta:-event.detail*40
+            let iTarget=delta>0?-50:50
+            // beginX=bar.offsetLeft+bar.offsetWidth/2
+            console.log(beginX,iTarget)
+            move(iTarget)
         }
+    outer.onmouseenter =function(){        
+        addHandler(this,'mousewheel',mouseWheel)
+        addHandler(this,'DOMMouseScroll',mouseWheel)//火狐浏览器
     }
-    document.onkeyup=function(){
-        clearInterval(moveTimer)
-    }
-    barBox.onmouseover=function(){
-        this.onmousewheel=function(event){
-            let e=event||window.event
-            alert(e.wheelDelta)
-        }
-        this.onDOMMouseScroll=function(event){
-            let e=event||window.event
-            alert(e.detail)
-        }
+    outer.onmouseleave=function(event){//移出时必须移除事件，否则会添加很多次的事件，导致滚轮滚一次
+        removeHandler(this,'mousewheel',mouseWheel)
+        removeHandler(this,'DOMMouseScroll',mouseWheel)//火狐浏览器
     }
     
     
