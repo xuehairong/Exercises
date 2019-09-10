@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽--clone</title>
+    <style>
+        body{
+            background-color: #3E3E3E
+        }
+        .box{
+            width: 100px;height: 100px;
+            background-color: #000000;
+            border:1px solid #888888;
+            position:absolute;
+            top:100px;
+            cursor:move;
+        }
+        #box1{
+            left:100px;
+        }
+        #box2{
+            left:300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box" id="box1"></div>
+    <div class="box" id="box2"></div>
+    <script>
+    window.onload=function(){
+        let box1=document.getElementById('box1'),
+            box2=document.getElementById('box2'),
+            copyDiv,disX,disY,zIndex=1
+        box1.onmousedown=
+        box2.onmousedown=function(event){
+            console.log(this)
+            let that=this
+            event=event||window.event
+            copyDiv=document.createElement('div')
+            copyDiv.className=this.className
+            copyDiv.style.opacity=0.3
+            copyDiv.style.left=this.currentStyle?this.currentStyle['left']:getComputedStyle(that)['left']
+            copyDiv.style.top=this.currentStyle?this.currentStyle['top']:getComputedStyle(that)['top']
+            copyDiv.style.zIndex=zIndex++
+            document.body.appendChild(copyDiv)
+            disX=event.clientX-this.offsetLeft//得出鼠标抓取，相对于左上角的距离
+            disY=event.clientY-this.offsetTop
+            document.onmousemove=function(event){
+                event=event||window.event
+                let left=event.clientX-disX,top=event.clientY-disY,
+                    maxLeft=document.documentElement.clientWidth-that.offsetWidth,//能拖动到的最右边的位置
+                    maxTop=document.documentElement.clientHeight-that.offsetHeight
+                left<0&&(left=0),top<0&&(top=0),left>maxLeft&&(left=maxLeft),top>maxTop&&(top=maxTop)
+                copyDiv.style.left=left+'px'
+                copyDiv.style.top=top+'px'
+                // return false
+            }
+            document.onmouseup=function(){
+                that.style.left=copyDiv.style.left
+                that.style.top=copyDiv.style.top
+                that.style.zIndex=copyDiv.style.zIndex
+                document.onmousemove=''
+                document.onmouseup=''
+                document.body.removeChild(copyDiv)
+                // that.releaseCapture && that.releaseCapture()
+            }
+            // that.setCapture && that.setCapture();		
+		    return false//不加这个拖拽会有小问题
+        }
+    }
+    </script>
+</body>
+</html>
