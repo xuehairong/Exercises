@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>窗口库拖拽(改变大小/最小化/最大化/还原/关闭)</title>
+    <style>
+        *{box-sizing: border-box}
+        body{
+            background-image: url(img/bg.jpg)
+        }
+        h2{
+            margin: 0;
+            font-size: 14px;
+            height: 27;
+            line-height: 24px;
+        }
+        p{
+            margin: 0;
+            font-size: 12px;
+        }
+
+        #L,#R{
+            width: 5px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            cursor: w-resize;
+        }
+        #T,#B{
+            width: 100%;
+            height: 5px;
+            position: absolute;
+            left: 0;
+            cursor:n-resize;
+        }
+        #T{top: 0}
+        #B{bottom: 0}
+        #L{left: 0; }
+        #R{right: 0;}
+        #LT,#RT,#LB{
+            position:absolute;
+            width: 8px;height: 8px;
+        }
+        #LT{top: 0;left:0;cursor: nw-resize;}
+        #RT{top: 0;right:0;cursor: ne-resize;}
+        #LB{bottom: 0;left:0;cursor: ne-resize;}
+        #RB{
+            bottom: 0;right:0;cursor: nw-resize;
+            width: 14px;height: 14px;
+            background-image: url(img/resize.png);
+            position:absolute;
+        }
+    #box{
+        width: 300px;height: 160px;
+        /* margin: 0 auto; */
+        background-color: #E9E9E9;
+        border: 1px solid;
+        border-radius: 4px;
+        position:absolute;
+        /* top:50%;left: 50%;不能用这个垂直居中的办法，后面拖动的时候不好定位，他总是-50%
+        transform: translate(-50%,-50%); */
+        padding: 5px;
+        /* resize: both;
+        overflow:auto; */
+        box-shadow: 0 1px 3px 2px #666
+    }
+    .title{
+        border-bottom: 1px solid gray;
+        position: relative;
+        cursor: move;
+    }
+    .option{
+        position: absolute;
+        right: 0;
+        top: 2px;
+    }
+    .option a{
+        width: 21px;height: 19px;
+        background-image: url(img/tool.png);
+        display: block;
+        float: left;
+    }
+    .option a + a{
+        margin-left: 4px;
+    }
+    .option .min{
+        background-position: -29px 0
+    }
+    .option .max{
+        background-position: -60px 0
+    }
+    .option .revert{
+        background-position: -149px 0;
+        display: none
+    }
+    .option .close{
+        background-position: -89px 0
+    }
+    .option .min:hover,.max:hover,.revert:hover,.close:hover{
+        background-position-y: -29px
+    }
+    .content{
+        padding-top: 5px;
+    }
+
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div class="title">
+            <h2>这是一个可以拖动的窗口</h2>
+            <div class="option">
+                <a href="" class="min"></a>
+                <a href="" class="max"></a>
+                <a href="" class="revert"></a>
+                <a href="" class="close"></a>
+            </div>
+        </div>
+        <div class="content">
+            <p>① 窗口可以拖动；</p>
+            <p>② 窗口可以通过八个方向改变大小；</p>
+            <p>③ 窗口可以最小化、最大化、还原、关闭；</p>
+            <p>④ 限制窗口最小宽度/高度。 </p>
+        </div>
+        <div id="L"></div>
+        <div id="R"></div>
+        <div id="T"></div>
+        <div id="B"></div>
+        <div id="LT"></div>
+        <div id="RT"></div>
+        <div id="LB"></div>
+        <div id="RB"></div>
+    </div>
+    <script>
+    window.onload=function(){
+        let box=document.getElementById('box')
+        let title=box.getElementsByClassName('title')[0],
+        L=document.getElementById('L'),
+            dragMinWidth = 250,
+            dragMinHeight = 124
+        //用js的方式垂直居中
+        box.style.left=document.documentElement.clientWidth/2-box.offsetWidth/2+'px'
+        box.style.top=document.documentElement.clientHeight/2-box.offsetHeight/2+'px'
+        //按住标题部分可以拖动
+        title.onmousedown=function(event){
+            event=event||window.event
+            let disX=event.clientX-box.offsetLeft,
+                disY=event.clientY-box.offsetTop
+            document.onmousemove=function(event){
+                event=event||window.event
+                let l=event.clientX-disX,t=event.clientY-disY,
+                    maxL=document.documentElement.clientWidth-box.offsetWidth,
+                    maxT=document.documentElement.clientHeight-box.offsetHeight
+                    l<0&&(l=0),t<0&&(t=0)
+                l>maxL&&(l=maxL),t>maxT&&(t=maxT)
+                box.style.left=l+'px'
+                box.style.top=t+'px'
+            }
+            document.onmouseup=function(){
+                document.onmousemove=''
+                document.onmouseup=''
+            }
+        }
+        //拉动左侧调整大小
+        function resize(parent,element,isLeft,isTop,alterWidth,alterHeight){
+            element.onmousedown=function(event){
+                var event=event||window.event
+                let disX=event.clientX-element.offsetLeft,
+                    disY=event.clientY-element.offsetTop,
+                    parentWidth=parent.offsetWidth,//记录元素的初始宽高，距离，重要！！
+                    parentHeight=parent.offsetHeight,
+                    parentLeft=parent.offsetLeft,
+                    parentTop=parent.offsetTop
+                document.onmousemove=function(event){
+                    var event=event||window.event
+                    let left=event.clientX-disX,top=event.clientY-disY
+                        width=isLeft?parentWidth-left:element.offsetWidth+left
+                        height=isTop?parentHeight-top:element.offsetHeight+top
+                    isLeft&&(parent.style.left=event.clientX+'px')
+                    isTop&&(parent.style.top=event.clientY+'px')
+
+                    alterWidth&&(parent.style.width=width+'px')
+                    alterHeight&&(parent.style.height=height+'px')
+                    return false
+                }
+                document.onmouseup=function(){
+                    document.onmousemove=''
+                    document.onmouseup=''
+                }
+                return false//一定要加
+            }
+        }
+        resize(box,L,true,false,true,false)
+        resize(box,T,false,true,false,true)
+        resize(box,R,false,false,true,false)
+        resize(box,B,false,false,false,true)
+
+        resize(box,LT,true,true,true,true)
+        resize(box,LB,true,false,true,true)
+        resize(box,RT,false,true,true,true)
+        resize(box,RB,false,false,true,true)
+    }
+    </script>
+</body>
+</html>
