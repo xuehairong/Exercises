@@ -104,7 +104,16 @@
     .content{
         padding-top: 5px;
     }
-
+    a{cursor: pointer;}
+    .open{
+        width: 21px;height: 19px;
+        background-image: url(img/tool.png);
+        display: none;
+        margin: 0 auto
+    }
+    .open:hover{
+        background-position:0 -29px;
+    }
     </style>
 </head>
 <body>
@@ -112,10 +121,10 @@
         <div class="title">
             <h2>这是一个可以拖动的窗口</h2>
             <div class="option">
-                <a href="" class="min"></a>
-                <a href="" class="max"></a>
-                <a href="" class="revert"></a>
-                <a href="" class="close"></a>
+                <a class="min"></a>
+                <a class="max"></a>
+                <a class="revert"></a>
+                <a class="close"></a>
             </div>
         </div>
         <div class="content">
@@ -133,16 +142,20 @@
         <div id="LB"></div>
         <div id="RB"></div>
     </div>
+    <a class="open"></a>
     <script>
+        let dragMinWidth = 250,
+            dragMinHeight = 124
+    window.onresize=function(){center(box)}
     window.onload=function(){
         let box=document.getElementById('box')
         let title=box.getElementsByClassName('title')[0],
-        L=document.getElementById('L'),
-            dragMinWidth = 250,
-            dragMinHeight = 124
-        //用js的方式垂直居中
-        box.style.left=document.documentElement.clientWidth/2-box.offsetWidth/2+'px'
-        box.style.top=document.documentElement.clientHeight/2-box.offsetHeight/2+'px'
+            min=box.getElementsByClassName('min')[0],
+            max=box.getElementsByClassName('max')[0],
+            revert=box.getElementsByClassName('revert')[0],
+            close=box.getElementsByClassName('close')[0],
+            open=document.getElementsByClassName('open')[0]
+        center(box)
         //按住标题部分可以拖动
         title.onmousedown=function(event){
             event=event||window.event
@@ -163,8 +176,48 @@
                 document.onmouseup=''
             }
         }
-        //拉动左侧调整大小
-        function resize(parent,element,isLeft,isTop,alterWidth,alterHeight){
+        min.onclick=close.onclick=function(){
+            box.style.display='none'
+            open.style.display='block'
+        }
+        open.onclick=function(){
+            box.style.display='block'
+            open.style.display='none'
+        }
+        max.onclick=function(){
+            // box.style.width = document.documentElement.clientWidth + "px"
+            // box.style.height = document.documentElement.clientHeight + "px"
+            box.style.left=0
+            box.style.top=0
+            box.style.width = document.documentElement.clientWidth + "px"//这2句一定要写在上2句的下面，否则有问题？？？
+            box.style.height = document.documentElement.clientHeight + "px"
+            this.style.display='none'
+            revert.style.display='block'
+        }
+        revert.onclick=function(){
+            this.style.display='none'
+            max.style.display='block'
+            box.style.width=dragMinWidth+'px'
+            box.style.height=dragMinHeight+'px'
+            center(box)
+        }
+        resize(box,L,true,false,true,false)
+        resize(box,T,false,true,false,true)
+        resize(box,R,false,false,true,false)
+        resize(box,B,false,false,false,true)
+
+        resize(box,LT,true,true,true,true)
+        resize(box,LB,true,false,true,true)
+        resize(box,RT,false,true,true,true)
+        resize(box,RB,false,false,true,true)
+    }
+    function center(element){
+        //用js的方式垂直居中
+        element.style.left=(document.documentElement.clientWidth-element.offsetWidth)/2+'px'
+        element.style.top=(document.documentElement.clientHeight-element.offsetHeight)/2+'px'
+    }
+    //拉动左侧调整大小
+    function resize(parent,element,isLeft,isTop,alterWidth,alterHeight){
             element.onmousedown=function(event){
                 var event=event||window.event
                 let disX=event.clientX-element.offsetLeft,
@@ -175,11 +228,22 @@
                     parentTop=parent.offsetTop
                 document.onmousemove=function(event){
                     var event=event||window.event
-                    let left=event.clientX-disX,top=event.clientY-disY
-                        width=isLeft?parentWidth-left:element.offsetWidth+left
-                        height=isTop?parentHeight-top:element.offsetHeight+top
-                    isLeft&&(parent.style.left=event.clientX+'px')
-                    isTop&&(parent.style.top=event.clientY+'px')
+                    let dragleft=event.clientX-disX,dragtop=event.clientY-disY, //鼠标拖动的距离
+                        width=isLeft?parentWidth-dragleft:element.offsetWidth+dragleft,
+                        height=isTop?parentHeight-dragtop:element.offsetHeight+dragtop,
+                        maxW = document.documentElement.clientWidth - parent.offsetLeft - 2,
+			            maxH = document.documentElement.clientHeight - parent.offsetTop - 2,
+                        left=parentLeft+dragleft,
+                        top=parentTop+dragtop
+                    width<dragMinWidth&&(width=dragMinWidth,dragleft=0)//限制最小宽高
+                    height<dragMinHeight&&(height=dragMinHeight,dragtop=0)
+                    width>maxW&&(width=maxW)//限制最大宽高
+                    height>maxH&&(height=maxH)
+                    
+                    // left<0&&(left=0)
+                    // top<0&&(top=0)
+                    isLeft&&(parent.style.left=left+'px')//原始距离+拖动的距离
+                    isTop&&(parent.style.top=top+'px')
 
                     alterWidth&&(parent.style.width=width+'px')
                     alterHeight&&(parent.style.height=height+'px')
@@ -192,16 +256,6 @@
                 return false//一定要加
             }
         }
-        resize(box,L,true,false,true,false)
-        resize(box,T,false,true,false,true)
-        resize(box,R,false,false,true,false)
-        resize(box,B,false,false,false,true)
-
-        resize(box,LT,true,true,true,true)
-        resize(box,LB,true,false,true,true)
-        resize(box,RT,false,true,true,true)
-        resize(box,RB,false,false,true,true)
-    }
     </script>
 </body>
 </html>
