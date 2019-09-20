@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仿苹果电脑任务栏</title>
+    <style>
+    *{box-sizing: border-box}
+    body{margin:0;padding:0}
+    #menu{
+        position:absolute;
+        bottom: 0;
+        text-align: center;
+        width: 100%
+    }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <img src="img/1.png" alt="">
+        <img src="img/2.png" alt="">
+        <img src="img/3.png" alt="">
+        <img src="img/4.png" alt="">
+        <img src="img/5.png" alt="">
+        <img src="img/6.png" alt="">
+        <img src="img/7.png" alt="">
+        <img src="img/8.png" alt="">
+    </div>
+    <script>
+    window.onload=function(){
+        let menu=document.getElementById('menu'),
+            imgs=menu.getElementsByTagName('img'),
+            widths=[]
+        //保存原宽度, 并设置当前宽度
+        for(let i=0;i<imgs.length;i++){
+            widths.push(imgs[i].offsetWidth)
+            imgs[i].width=Number.parseFloat(imgs[i].offsetWidth/2)
+        }
+        //鼠标移动事件
+        document.onmousemove=function(event){
+            let e=event||window.event
+            for(let i=0;i<imgs.length;i++){
+                let a=e.clientX-imgs[i].offsetLeft-imgs[i].offsetWidth/2
+                let b=e.clientY-imgs[i].offsetTop- menu.offsetTop-imgs[i].offsetHeight/2
+                let scale=1-Math.sqrt(a*a+b*b)/300
+                if(scale<0.5)scale=0.5
+                imgs[i].width=widths[i]*scale
+            }
+        }
+    }
+    </script>
+</body>
+</html>
