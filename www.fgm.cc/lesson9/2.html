@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拼图小游戏</title>
+    <style>
+        *{box-sizing: border-box}
+        body{
+            background-image: url(img/bg.png)
+        }
+        #menu{
+            width: 100%;
+            text-align: center
+        }
+    #menu img{
+        border-radius: 6px;
+        opacity: 0.5;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+    #menu img.selected{
+        opacity: 1;
+        border-color: yellow
+    }
+    #menu img:hover{
+        opacity: 1;
+    }
+    #startGame{
+        width: 100%;
+        text-align: center;
+    }
+    #cardWrapper{
+        width: 410px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+    }
+    #cardWrapper .mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top:0;left: 0;
+    }
+    #cardWrapper .card{
+        cursor: move;
+        width: 82px;
+        height: 190px;
+    }
+    #cardWrapper .card img{
+         display: block /*为了解决图片下面有空格问题 */
+    }
+    .dragover{
+        border: 2px dashed yellow
+    }
+    .dragover img{
+        opacity: 0.5;
+    }
+    .dragHide{
+        position:absolute;
+        left:-1000px;
+        top: -1000px;
+    }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <img class="selected" src="img/girl0/girl.jpg" alt="">
+        <img src="img/girl1/girl.jpg" alt="">
+        <img src="img/girl2/girl.jpg" alt="">
+    </div>
+    <div id="startGame"><button>开始游戏</button></div>
+    <div id="cardWrapper">
+
+    </div>
+    <script>
+     window.onload=function(){
+         let menu=document.getElementById('menu'),
+            mimgs=menu.getElementsByTagName('img'),
+            btnStart=document.getElementsByTagName('button')[0],
+            cardWrapper=document.getElementById('cardWrapper'),
+            cardIndexData=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+            currentImgUrl='img/girl0/',
+            startTime
+
+         initCards()
+         menu.onclick=function(event){
+             event=event||window.event
+             if(event.target.tagName=='IMG'){
+                 for(let i=0;i<mimgs.length;i++){
+                     mimgs[i].classList.remove('selected')
+                 }
+                 event.target.classList.add('selected')
+                 cardIndexData.sort((a,b)=>a-b)//点击小图切换时，重新排好顺序
+                 currentImgUrl=`${event.target.src.replace('girl.jpg','')}`
+                 initCards()
+                
+             }
+         }
+         btnStart.onclick=function(){
+            cardIndexData.sort((a,b)=>{return Math.random()>0.5?-1:1})//点击开始游戏时，重新排好顺序
+            startTime=new Date()
+            initCards(true)
+         }
+         function createMask(){
+            let mask=document.createElement('div')
+            mask.className='mask'
+            cardWrapper.appendChild(mask)
+         }
+         function initCards(isStart=false){
+            let fragement=document.createDocumentFragment()
+            for(let i=0;i<cardIndexData.length;i++){
+                let div=document.createElement('div')
+                div.className='card'
+                div.id='card'+i
+                let img=document.createElement('img')
+                img.src=currentImgUrl+`${cardIndexData[i]}.png`
+                // img.draggable=true
+                div.appendChild(img)
+                div.ondragenter=function(event){
+                    event=event||window.event
+                    event.preventDefault?event.preventDefault():event.returnValue=false
+                    this.classList.add('dragover')
+                }
+                div.ondragover=function(event){
+                    event=event||window.event
+                    event.preventDefault?event.preventDefault():event.returnValue=false
+                }
+                div.ondragleave=function(event){
+                    event=event||window.event
+                    event.preventDefault?event.preventDefault():event.returnValue=false
+                    this.classList.remove('dragover')
+                }
+                div.ondrop=function(event){
+                    event=event||window.event
+                    event.preventDefault?event.preventDefault():event.returnValue=false
+                    event.stopPropagation();//加了这个才阻止打开链接
+                    this.classList.remove('dragover')
+                    let dragFrom=document.getElementById(event.dataTransfer.getData('Text'))
+                    let toSrc=this.firstChild.src
+                    let fromSrc=dragFrom.firstChild.src
+                    dragFrom.firstChild.src=toSrc    
+                    this.firstChild.src=fromSrc
+                    if(isSuccess()){
+                        createMask()
+                        let now=new Date()
+                        let hour=minute=second=0
+                        let interval=Number.parseInt((now.getTime()-startTime.getTime())/1000)
+                        console.log(interval)
+                        hour=Number.parseInt(interval/3600)
+                        interval%=3600
+                        console.log(interval)
+                        minute=parseInt(interval/60)
+                        interval%=60
+                        console.log(interval)
+                        second=interval
+                        alert(`成功用时：${hour}时${minute}分${second}秒`)
+                    }
+                }
+                img.ondragstart=function(event){
+                    event=event||window.event
+                    event.dataTransfer.setData('Text',this.parentElement.id)
+                    // this.classList.add('dragHide')
+                }
+                img.ondrag=function(event){
+                    event=event||window.event
+                }
+                img.ondragend=function(event){
+                    event=event||window.event
+                    // this.classList.remove('dragHide')
+                }
+                fragement.appendChild(div)
+            }
+            cardWrapper.innerHTML=''
+            cardWrapper.appendChild(fragement)
+            if(!isStart){//如果不是开始游戏，就要加一个遮罩层
+                cardWrapper.style.backgroundImage=`url(${currentImgUrl}bg.png)`
+                createMask()
+            }
+         }
+         function isSuccess(){//判断是否匹配成功
+            let cards=cardWrapper.getElementsByClassName('card')
+             for(let i=0;i<cards.length;i++){
+                if(i+1!=cards[i].firstChild.src.match(/(\d+)\./)[1]){
+                    return false
+                }
+             }
+             return true
+         }
+     }
+    </script>
+</body>
+</html>
