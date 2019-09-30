@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自动轮播广告(面向对象版本)</title>
+    <style>
+        *{box-sizing: border-box}
+        body{background: #000000}
+        #outer{
+            padding: 10px;
+            border-radius: 10px;
+            background: #ffffff;
+            position: relative;
+            height: 192px;width: 512px;
+            margin:0 auto;
+            
+        }
+        #box{
+            position: relative;
+            width: 100%;
+            height: 170px;
+            overflow: hidden;
+        }
+        .list{
+            position: absolute;
+            transition: top 1s ease-out;
+        }
+        img{
+            display: block
+        }
+        ul,li{margin: 0;padding: 0;list-style:none;}
+        .count{
+            position:absolute;
+            bottom: 10px;right: 10px;
+            padding: 5px;
+        }
+        .count li{
+            float: left;
+            width: 20px;height: 20px;line-height:20px ;
+            border-radius: 50%;
+            z-index: 99;
+            font-size: 12px;
+            background: #F9B039;
+            color:#ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+        .count li.current{
+            background: #FF6600;
+            font-weight: bold
+        }
+        .count li+li{
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="outer">
+        <div id="box">
+            <div class="list">
+                <img src="../lesson4/img/01.jpg" alt="">
+                <img src="../lesson4/img/02.jpg" alt="">
+                <img src="../lesson4/img/03.jpg" alt="">
+                <img src="../lesson4/img/04.jpg" alt="">
+                <img src="../lesson4/img/05.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+// let $=function(id,parent=document){
+//     return parent.getElementById(id)
+// }
+class AutoPlay{
+    constructor(id){
+        this.box=document.getElementById(id)
+        this.list=this.box.getElementsByClassName('list')[0]
+        console.log(this.list)
+        this.imgs=this.list.getElementsByTagName('img')
+        console.log(this.imgs)
+        this.currentImgNo=0
+        this.isReverse=false
+        this.timer=null
+        this.count=null
+        this.createCount()
+        this.showImg(this.currentImgNo)
+        this.autoPlay()
+    }
+    createCount(){//生成页码按钮
+        this.count=document.createElement('ul')
+        this.count.className='count'
+        let li
+        for(let i=0;i<this.imgs.length;i++){
+            li=document.createElement('li')
+            li.innerHTML=i+1
+            li.addEventListener('mouseover',()=>{//如果用普通函数this会指向window
+                this.timer&&clearInterval(this.timer)//悬停在页码上时，要把自动循环播放的定时器清除
+                this.currentImgNo=i
+                this.showImg(i)
+            })
+            li.addEventListener('mouseleave',()=>{
+                this.autoPlay()
+            })
+            this.count.appendChild(li);
+        }
+        this.box.appendChild(this.count)
+    }
+    autoPlay(){
+        this.timer=setInterval(()=>{//如果用普通函数this会指向window
+            if(this.currentImgNo==this.imgs.length-1){
+                this.isReverse=true
+            }else if(this.currentImgNo==0){
+                this.isReverse=false
+            }
+            this.isReverse?this.currentImgNo--:this.currentImgNo++
+            this.showImg(this.currentImgNo)
+        }, 2000);
+    }
+    showImg(index){
+        let lis=this.count.children
+        for(let i=0;i<this.imgs.length;i++){
+            lis[i].classList.remove('current')
+        }
+        lis[index].classList.add('current')
+        this.list.style.top=-this.imgs[0].offsetHeight*index+'px'
+    }
+}
+window.onload=function(){
+    new AutoPlay('box')
+}
+</script>
+</html>
