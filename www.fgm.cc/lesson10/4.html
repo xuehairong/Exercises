@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>照片墙（面向对象版，没做动画）</title>
+    <style>
+    .box{
+        width: 860px;
+        margin: 0 auto;
+        border: 1px solid #b8b8b8;
+    }
+    .title{
+        height: 30px;
+        background-color: #FAFAFA;
+        border-bottom: 1px solid #b8b8b8;
+    }
+    .content{
+        background-color: #EEEEEE;
+        display:flex;
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+    .pic{
+        padding: 7px;
+    }
+    .pic-inner{
+        background-color: #ffffff;
+        padding: 6px;
+        border: 1px solid #c3c3c3;
+    }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="title"><a class="sort" href="javascript:void(0)">随机排序</a></div>
+        <div class="content">
+            
+        </div>
+    </div>
+    <div class="box">
+        <div class="title"><a class="sort" href="javascript:void(0)">随机排序</a></div>
+        <div class="content">
+            
+        </div>
+    </div>
+    <script>
+    class PhotoWall{
+        constructor(box,photoSrcs){
+            this.content=box.getElementsByClassName('content')[0]
+            this.sortBtn=box.getElementsByClassName('sort')[0]
+            this.photoSrcs=photoSrcs
+            this.photos=[]
+            this.initialize()
+            this.sortBtn.onclick=()=>{this.radomSort()}
+        }
+        initialize(){
+            let fragement=document.createDocumentFragment()
+            for(let src of this.photoSrcs){
+                let pic=document.createElement('div')
+                pic.className='pic'
+                let picInner=document.createElement('div')
+                picInner.className='pic-inner'
+                let img=document.createElement('img')
+                img.src=src
+                this.photos.push(img)
+                picInner.appendChild(img)
+                pic.appendChild(picInner)
+                fragement.appendChild(pic)
+            }
+            this.content.appendChild(fragement)
+        }
+        radomSort(){
+            this.photoSrcs.sort(function(){
+                return Math.random()>0.5?1:-1
+            })
+            for(let i=0;i< this.photos.length;i++){
+                this.photos[i].src=this.photoSrcs[i]
+            }
+        }
+
+    }
+    window.onload=function(){
+        let boxs=document.getElementsByClassName('box')
+        let photoSrcs=[]
+        let sort1=document.getElementById('sort1')
+        for(let i=0;i<20;i++) photoSrcs.push(`90/${i}.jpg`)
+        for(let box of boxs){
+            let photoWall=new PhotoWall(box,photoSrcs)
+        }
+    }
+    </script>
+</body>
+</html>
