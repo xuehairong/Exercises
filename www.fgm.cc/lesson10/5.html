@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽库</title>
+    <style>
+        .box{
+            width: 100px;height: 100px;
+            border: 1px solid #FF6600;
+            background-color: #FEF4EB;
+            padding: 6px;
+            position:absolute;
+            left:50px;
+            top: 100px;
+        }
+        .drag{
+            background-color: #FF6600;
+            width: 100%;
+            height: 25px;
+            cursor:move;
+        }
+    </style>
+</head>
+<body>
+    <button>锁定范围</button>
+    <button>水平锁定</button>
+    <button>垂直锁定</button>
+    <button>锁定位置</button>
+    <p>拖放状态：<span id="status">未开始</span></p>
+    <div class="box">
+        <div class="drag"></div>
+    </div>
+    <script>
+        class DragObject{
+            constructor(parent,dragTarget){
+                this.parent=parent
+                this.dragTarget=dragTarget
+                this.dragTarget.onmousedown=this.bind(this,this.start)
+                this.disX=0
+                this.disY=0
+                this.onStart=function(){}
+                this.onMove=function(){}
+                this.onStop=function(){}
+                this.lockX=false
+                this.lockY=false
+                this.lock=false
+                this.lockRange=false
+            }
+            start(event){
+                // console.log(this)
+                let e=event||window.event
+                this.disX=e.clientX-this.parent.offsetLeft
+                console.log(this.disX,e.clientX,this.dragTarget.offsetLeft)
+                this.disY=e.clientY-this.parent.offsetTop
+                document.onmousemove=this.bind(this,this.move)
+                document.onmouseup=this.bind(this,this.Stop)
+                this.onStart()
+            }
+            move(event){
+                let e=event||window.event
+                let left=e.clientX-this.disX,
+                    top=e.clientY-this.disY,
+                    maxLeft=document.documentElement.clientWidth-this.parent.offsetWidth,//能拖动到的最右边的位置
+                    maxTop=document.documentElement.clientHeight-this.parent.offsetHeight
+                if(this.lockRange){
+                    left<0&&(left=0)
+                    top<0&&(top=0)
+                    left>maxLeft&&(left=maxLeft)
+                    top>maxTop&&(top=maxTop)
+                }
+                
+                if(!this.lockX&&!this.lock) this.parent.style.left=left+'px'
+                if(!this.lockY&&!this.lock) this.parent.style.top=top+'px'
+                this.onMove()
+                return false
+            }
+            Stop(event){
+                let e=event||window.event
+                document.onmousemove=''
+                document.onmouseup=''
+                this.onStop()
+            }
+            bind(object,fnHandler){
+                return function(){//这个匿名函数作为，监听事件函数，会包含event参数
+                    // console.log(arguments)
+                    return fnHandler.apply(object,arguments)
+                }
+            }
+        }
+        window.onload=function(){
+            let box=document.getElementsByClassName('box')[0]
+            let dragTarget=box.getElementsByClassName('drag')[0]
+            let dragObject=new DragObject(box,dragTarget)
+            let oStatus=document.getElementById('status')
+            let buttons=document.getElementsByTagName('button')
+            buttons[0].onclick=function(){
+                dragObject.lockRange=!dragObject.lockRange
+                this.innerHTML=!dragObject.lockRange?'锁定范围':'取消锁定范围'
+            }
+            buttons[1].onclick=function(){
+                dragObject.lockX=!dragObject.lockX
+                this.innerHTML=!dragObject.lockX?'水平锁定':'取消水平锁定'
+            }
+            buttons[2].onclick=function(){
+                dragObject.lockY=!dragObject.lockY
+                this.innerHTML=!dragObject.lockY?'垂直锁定':'取消垂直锁定'
+            }
+            buttons[3].onclick=function(){
+                dragObject.lock=!dragObject.lock
+                this.innerHTML=!dragObject.lock?'锁定位置':'取消锁定位置'
+            }
+
+            dragObject.onStart=function(){
+                oStatus.innerHTML='开始拖拽'
+            }
+            dragObject.onMove=function(){
+                oStatus.innerHTML="left:"+this.parent.offsetLeft+",top:"+this.parent.offsetTop
+            }
+            dragObject.onStop=function(){
+                oStatus.innerHTML='停止拖拽'
+            }
+        }
+    </script>
+</body>
+</html>
