@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>无缝滚动</title>
+    <style>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        background-color: #052D01;
+    }
+    #box{
+        width: 210px;
+        height: 700px;
+        position: relative;
+        border: 1px solid #5E8743;
+        margin: 20px;
+        padding: 70px 20px;
+    }
+    .up,.down{
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background-image: url(img/arrow.jpg);
+        left: 50%;
+        margin-left: -24px;
+    }
+    .up{
+        top: 10px;
+    }
+    .down{
+        bottom:  10px;
+        background-position: bottom;
+    }
+    .listWrapper{
+        overflow: hidden;
+        height: 570px;
+        width: 210px;
+        position: absolute;
+    }
+    ul{
+        position: absolute;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .list.top{
+        transition: top 1s ease-out;
+    }
+    .list.bottom{
+        transition: bottom 1s ease-out;
+    }
+
+    li{
+        color: #ffffff;
+        font-size: 14px;
+        text-align: center;
+        width: 160px;
+        height: 190px;
+    }
+    img{
+        display:block;
+        margin-bottom: 5px;
+        border: 2px solid #ccc;
+    }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div class="up"></div>
+        <div class="down"></div>
+        <div class="listWrapper">
+            <ul class="list">
+                <li>
+                    <img src="img/1.jpeg" alt="">
+                    Ozolio - Webcam Hosting
+                </li>
+                <li>
+                    <img src="img/2.jpeg" alt="">
+                    Sullivan Construction Inc.
+                </li>
+                <li>
+                    <img src="img/3.jpeg" alt="">
+                    Maui Stables
+                </li>
+                <li>
+                    <img src="img/4.jpeg" alt="">
+                    Code Rebel 3.0
+                </li>
+                <li>
+                    <img src="img/5.jpeg" alt="">
+                    SecurityPro Shop
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        window.onload=function(){
+            let box=document.getElementById('box')
+            new Roll(box)
+        }
+        class Roll{
+            constructor(box){
+                this.box=box
+                this.btnUp=box.getElementsByClassName("up")[0]
+                this.btnDown=box.getElementsByClassName("down")[0]
+                this.listWrapper=box.getElementsByClassName('listWrapper')[0]
+                this.list=box.getElementsByClassName('list')[0]
+                this.items=this.list.children
+                this.height=this.items[0].offsetHeight
+                this.btnUp.onclick=()=>{this.up()}//用箭头函数 this就指向当前运行环境
+                this.btnDown.onclick=()=>{this.down()}
+                
+            }
+            up(){
+                //insertBefore可将页面上存在的node插入指定位置
+                this.list.classList.remove('transition')//top变成负数的时候不需要动画效果
+                this.list.style.top=0-this.height+'px'
+                this.list.insertBefore(this.items[this.items.length-1],this.items[0])
+                setTimeout(()=>{
+                    this.list.classList.add('transition')//top还原的时候需要动画效果，并延时执行，否则看不到动画效果
+                    this.list.style.top=0
+                },100)
+                
+            }
+            down(){
+                this.list.classList.remove('transition')//top变成负数的时候不需要动画效果
+                this.list.style.bottom=0-this.height+'px'
+                this.list.insertBefore(this.items[0],this.items[this.items.length-1])
+                setTimeout(()=>{
+                    this.list.classList.add('transition')//top还原的时候需要动画效果，并延时执行，否则看不到动画效果
+                    this.list.style.bottom=0
+                },100)
+            }
+        }
+    </script>
+</body>
+</html>
