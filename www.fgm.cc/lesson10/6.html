@@ -47,11 +47,8 @@
         padding: 0;
         margin: 0;
     }
-    .list.top{
+    .list.transition{
         transition: top 1s ease-out;
-    }
-    .list.bottom{
-        transition: bottom 1s ease-out;
     }
 
     li{
@@ -76,23 +73,23 @@
             <ul class="list">
                 <li>
                     <img src="img/1.jpeg" alt="">
-                    Ozolio - Webcam Hosting
+                    1Ozolio - Webcam Hosting
                 </li>
                 <li>
                     <img src="img/2.jpeg" alt="">
-                    Sullivan Construction Inc.
+                    2Sullivan Construction Inc.
                 </li>
                 <li>
                     <img src="img/3.jpeg" alt="">
-                    Maui Stables
+                    3Maui Stables
                 </li>
                 <li>
                     <img src="img/4.jpeg" alt="">
-                    Code Rebel 3.0
+                    4Code Rebel 3.0
                 </li>
                 <li>
                     <img src="img/5.jpeg" alt="">
-                    SecurityPro Shop
+                    5SecurityPro Shop
                 </li>
             </ul>
         </div>
@@ -119,6 +116,8 @@
                 //insertBefore可将页面上存在的node插入指定位置
                 this.list.classList.remove('transition')//top变成负数的时候不需要动画效果
                 this.list.style.top=0-this.height+'px'
+                //将最后一个移到第一个前面，实现循环播放
+                //对页面上的引用是动态的，所以this.items会跟着变化
                 this.list.insertBefore(this.items[this.items.length-1],this.items[0])
                 setTimeout(()=>{
                     this.list.classList.add('transition')//top还原的时候需要动画效果，并延时执行，否则看不到动画效果
@@ -127,13 +126,14 @@
                 
             }
             down(){
-                this.list.classList.remove('transition')//top变成负数的时候不需要动画效果
-                this.list.style.bottom=0-this.height+'px'
-                this.list.insertBefore(this.items[0],this.items[this.items.length-1])
-                setTimeout(()=>{
-                    this.list.classList.add('transition')//top还原的时候需要动画效果，并延时执行，否则看不到动画效果
-                    this.list.style.bottom=0
-                },100)
+                //top变成负数的时候需要动画效果,模拟向上滑动的效果
+                this.list.classList.add('transition')
+                this.list.style.top=0-this.height+'px'
+                setTimeout(()=>{//等动画执行结束后，去掉动画效果，瞬间把top变成0，制造滑动假象
+                    this.list.classList.remove('transition')
+                    this.list.appendChild(this.items[0])//将列表第一个移到最后，实现循环播放
+                    this.list.style.top=0
+                },1000)
             }
         }
     </script>
