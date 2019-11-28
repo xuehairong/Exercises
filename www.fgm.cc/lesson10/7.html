@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>懒加载</title>
+    <style>
+        ul{
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            width:706px ;
+        }
+        li{
+            background:#000 url(img/lazy/loading.gif) 50% 50% no-repeat;
+            width: 353px;
+            height: 225px;
+        }
+    </style>
+</head>
+<body>
+    <ul id="box">
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/1.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/2.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/3.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/4.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/5.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/6.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/7.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/8.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/9.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/10.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/11.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/12.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/13.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/14.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/15.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/16.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/17.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/18.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/19.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/20.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/21.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/22.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/23.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/24.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/25.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/26.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/27.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/28.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/29.jpg" /></li>
+        <li><img src="img/lazy/none.gif" data-img="img/lazy/30.jpg" /></li>
+    </ul>
+</body>
+<script>
+window.onload=function(){
+    let box=document.getElementById('box')
+    new Lazyload(box)
+}
+class Lazyload{
+    constructor(obj){
+        this.lazy=obj
+        this.imgs=obj.getElementsByTagName('img')
+        this.load()
+        //必须用bind转换一下，否则load()函数里的this会指向window
+        window.onscroll=window.onresize=this.bind(this,this.load)
+    }
+    load(){
+            //滚动条隐藏部分的高度
+        let scrollTop=document.documentElement.scrollTop||document.body.scrollTop
+            // ,clientHeight=document.documentElement.clientHeight+scrollTop
+            // ,parents=[],parent=null,top=0,bottom=0,
+            //可见高度
+            ,seeHeight=document.documentElement.clientHeight
+            ,top=0
+            //获取未加载的图片
+            ,notLoadeds=this.loaded(0)
+            
+        for(let notLoaded of notLoadeds){
+            // parent=notLoaded.parentElement||notLoaded.parentNode
+            top=this.getElementTop(notLoaded)//当前未加载的图片 在页面上的高度
+            // bottom=top+parent.offsetHeight//距离内容最底部的高度
+            // if((top>scrollTop&&top>clientHeight)
+            //     ||(bottom>scrollTop&&bottom<clientHeight)){
+            //     notLoaded.src=this.attr(notLoaded,'data-img')||notLoaded.src
+            //     notLoaded.classList.add('loaded')
+            // }
+            //判断当前图片位置是否在可视区域
+            if(top<scrollTop+seeHeight){
+                notLoaded.src=this.attr(notLoaded,'data-img')||notLoaded.src
+                notLoaded.classList.add('loaded')
+            }
+        }
+    }
+    loaded(status){
+        let result=[...this.imgs].filter((x)=>{
+            let isLoaded=[...x.classList].indexOf('loaded')>-1
+            //根据status 来判断返回已加载的图片还是返回未加载的图片
+            if(!!status&&isLoaded)//!!作用是转换成布尔值
+            {
+                return x
+            }else if(!isLoaded){
+                return x
+            }
+        })
+        return result
+    }
+    getElementTop(element){
+        let actualTop=element.offsetTop
+            ,current=element.offsetParent
+        while(current!=null){
+            actualTop+=current.offsetTop
+            current=current.offsetParent
+        }
+        return actualTop
+    }
+    attr(element,attr,value){
+        if(value){
+            element.setAttribute(attr,value)
+        }else{
+            return element.attributes[attr]?element.attributes[attr].nodeValue:undefined
+        }
+    }
+    bind(object,handler){
+        return function(){
+            return handler.apply(object,arguments)
+        }
+    }
+}
+</script>
+</html>
