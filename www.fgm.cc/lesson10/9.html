@@ -441,7 +441,7 @@
                     }
                 }
                 let skip=this.currentIndex-lastIndex//当前指定要显示的索引跟上一个显示的索引差
-                let count=skip<0?0-skip:skip//要执行滚动的次数
+                let count=Math.abs(skip)//要执行滚动的次数
                 if(count==this.maxIndex){
                     skip=0-skip
                     count=1 //如果是从第一个移到最后一个只要反过来移一次就行
