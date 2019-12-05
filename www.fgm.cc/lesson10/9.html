@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>百度有啊通栏展示效果</title>
+    <style>
+        *{
+            box-sizing: content-box;
+        }
+        body {
+            font: 12px/1.5 arial
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        #box {
+            width: 740px;
+            margin: 10px auto;
+            position: relative;
+        }
+        #container{
+            height: 230px;
+        }
+
+        .item {
+            padding: 12px;
+            background-color: #FAFAFA;
+            border: 1px solid #ddd;
+            position: absolute;
+            display: flex;
+            transition: left 1s ease-out;
+        }
+
+        .item .content {
+            margin-left: 10px;
+        }
+
+        .item .content dd {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .item .content dt {
+            height: 24px;
+            line-height: 24px;
+        }
+
+        .item .content .subtitle {
+            color: #999;
+        }
+
+        .item .content .star {
+            position: relative;
+            display: inline-block;
+            width: 69px;
+            height: 12px;
+        }
+
+        .item .content .star div {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-image: url(img/youa/star.png);
+            height: 14px;
+            vertical-align: middle;
+        }
+
+        .item .content .star .star_red {
+            z-index: 1
+        }
+
+        .item .content .star .star_grey {
+            width: 69px;
+            background-position-y: 100%;
+        }
+
+        .pink,
+        .blue,
+        .green {
+            background-color: #F66B5B;
+            padding: 5px;
+            font-weight: 700;
+            color: #fff;
+            margin-right: 2px;
+        }
+
+        .blue {
+            background-color: #96BAE7;
+        }
+
+        .green {
+            background-color: #9CDBC3;
+        }
+
+        .comment {
+            background-color: #fff;
+            border: 1px solid #E9E9E9;
+            margin-top: 10px;
+            width: 232px;
+            height: 96px;
+            overflow: hidden;
+        }
+
+        .comment .head {
+            padding: 0px 10px;
+            height: 24px;
+            line-height: 24px;
+            border-bottom: 1px solid #E9E9E9;
+        }
+
+        .comment .comment_list {
+            padding: 5px 10px;
+        }
+
+        .comment .comment_list li {
+            white-space: nowrap;
+            height: 20px;
+            line-height: 20px;
+        }
+
+        .comment .comment_list li .user_name {
+            color: #999;
+        }
+        #controlBar{
+            text-align: center;
+            background-image: url(img/youa/bg.png);
+            height: 37px;
+        }
+        #controlBar ul{
+            display: inline-block;
+        }
+        #controlBar li{
+            display: inline-block;
+            padding: 2px 2px;
+        }
+        #controlBar li button{
+            width: 8px;
+            height: 8px;
+            background-color: #FEFEFE;
+            border: 1px solid #BCC1C5;
+            padding:0;
+            cursor: pointer;
+        }
+        #controlBar li button.active{
+            background-color: #848484;
+            border-color: #6E6E6E;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <div id="container">
+            <div class="item">
+                <div class="img"><img src="img/youa/1.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/2.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/3.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/4.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/5.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/6.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/7.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="img"><img src="img/youa/8.jpg" alt=""></div>
+                <div class="content">
+                    <dd>必图拳馆</dd>
+                    <dt class="subtitle">不要把自己困住 你需要释放！</dt>
+                    <dt>总体评价：<div class="star">
+                            <div class="star_red" style="width:61px;"></div>
+                            <div class="star_grey"></div>
+                        </div>
+                    </dt>
+                    <dt>用户印象：<span class="pink">过瘾</span><span class="blue">带劲</span><span class="green">有活力</span></dt>
+                    <div class="comment">
+                        <div class="head">用户评价</div>
+                        <div class="comment_list">
+                            <ul id="list">
+                                <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><span
+                                        class="user_name">thaifight：</span>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+                                <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><span class="user_name">快乐小友：</span>散打课的实战机会挺多
+                                    很过瘾 能和杨教练学到真东西！</li>
+                                <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><span
+                                        class="user_name">爱情赛车：</span>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="controlBar">
+
+        </div>
+    </div>
+    <script>
+        window.onload=function(){
+            new Carousel('box')
+        }
+        class Carousel {
+            constructor(id) {
+                this.box = typeof (id) == 'string' ? document.getElementById(id) : id
+                this.container=document.getElementById('container')
+                this.items=this.box.getElementsByClassName('item')
+                this.options = [
+                    {left:0, zIndex:2, opacity:0.3},
+                    {left:40, zIndex:3, opacity:0.60},
+                    {left:124, zIndex:4, opacity:1},
+                    {left:208, zIndex:3, opacity:0.60},
+                    {left:246, zIndex:2, opacity:0.3},                                                                      
+                    {left:40, zIndex:0, opacity:0}
+                ];
+                this.centerPicIndex=2 //显示在中间位置的index
+                this.currentIndex=0 //当前展示的index
+                this.skip=0//当前图片是否在中间
+                this.maxIndex=this.items.length-1 //有几张图
+                this.controlBar=document.getElementById('controlBar')//下方的控制bar
+                this.controlButtons=[]//控制bar上的所有按钮
+                this.generateControlBar()//生成bar
+                for(let i of [0,1])this.container.insertBefore(this.items[this.maxIndex],this.items[0])
+                this.move(0)//初始化bar上的选中状态
+                this.timer=setInterval(()=>{
+                    this.move()//每隔2秒钟轮播
+                },2000)
+            }
+            generateControlBar(){//生成控制bar
+                let ul=document.createElement('ul')
+                for(let i=0;i<=this.maxIndex;i++){
+                    let li=document.createElement('li')
+                    let button=document.createElement('button')
+                    button.index=i
+                    this.controlButtons.push(button)
+                    li.appendChild(button)
+                    ul.appendChild(li)
+                }
+                ul.onmouseover=(event)=>{//鼠标移入选中
+                    event=event||window.event
+                    this.timer&&clearInterval(this.timer)
+                    if(event.target.tagName=='BUTTON'){
+                        this.move(event.target.index)
+                    }
+                }
+                ul.onmouseleave=()=>{//鼠标移出
+                    this.timer=setInterval(()=>{
+                        this.move()
+                    },2000)
+                }
+                this.controlBar.appendChild(ul)                
+            }
+            move(index){
+                let lastIndex=this.currentIndex
+                if(typeof(index)=='number'){//有传参数的话根据参数
+                    this.currentIndex=index                   
+                }else{//没有参数就默认 当前index加1 实现轮播
+                    if(this.currentIndex==this.maxIndex){
+                        this.currentIndex=0
+                    }else{
+                        this.currentIndex++
+                    }
+                }
+                let skip=this.currentIndex-lastIndex//当前指定要显示的索引跟上一个显示的索引差
+                let count=skip<0?0-skip:skip//要执行滚动的次数
+                if(count==this.maxIndex){
+                    skip=0-skip
+                    count=1 //如果是从第一个移到最后一个只要反过来移一次就行
+                } 
+                for(let i=0;i<count;i++){//根据差距调整图片的顺序
+                    if(skip>0){//差距大于0的往后滚
+                        this.container.appendChild(this.items[0])
+                    }else{//差距小于0的往前滚
+                        this.container.insertBefore(this.items[this.maxIndex],this.items[0])
+                    }
+                }
+                //调整好节点元素的位置后，再根据设定好的样式赋值
+                for(let i=0;i<=this.maxIndex;i++){
+                    if(i<6){
+                        for(let key in this.options[i]){
+                            this.css(this.items[i],key,this.options[i][key])
+                        }
+                    }else{
+                        this.css(this.items[i],'opacity',0)
+                        this.css(this.items[i],'left',0)
+                    }
+                    this.controlButtons[i].classList.remove('active')
+                }
+                this.controlButtons[this.currentIndex].classList.add('active')
+
+            }
+            css(element,attr,value){
+                if(arguments.length==2){
+                    element.currentStyle?element.currentStyle[attr]:getComputedStyle(element,null)[attr]
+                }else if(arguments.length==3){
+                    switch (attr) {
+                        case "width":
+                        case "height":
+                        case "top":
+                        case "left":
+                        case "bottom":
+                            element.style[attr]=value+'px'
+                            break;
+                        default:
+                            element.style[attr]=value
+                            break;
+                    }
+                }
+            }
+
+        }
+    </script>
+</body>
+
+</html>
