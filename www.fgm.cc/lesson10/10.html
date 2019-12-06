@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>放烟花效果(面向对象版)</title>
+    <style>
+        body{
+            background-color: #000;
+            text-align: center;
+        }
+        button{
+            background-color: #FF0066;
+            color: #fff;
+            border-radius: 15px;
+            border: none;
+            padding: 0 15px;
+            font: 14px/30px arial;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <button id="btnManual">手动放烟花</button>
+        <button id="btnAuto">自动放烟花</button>
+        <button id="btnStop">停止放烟花</button>
+    </div>
+</body>
+<script>
+let fgm={
+    addEvent(element,type,handler){
+        return element.addEventListener?element.addEventListener(type,handler,false):element.attachEvent("on"+type,handler)
+    },
+    removeEvent(element,type,handler){
+        return element.removeEventListener?element.removeEventListener(type,handler,false):element.removeEvent("on"+type,handler)
+    },
+    randomRange(min,max){
+        return Math.floor(Math.random()*(max-min+1)+min)
+    },
+    getRangeColor(){
+        let str=this.randomRange(0,0xFFFFFF).toString(16)
+        return "#"+str.padStart(6,'0')//字符不足6位补齐
+        // return "#fff"
+    },
+    bind(obj,handler){
+        return function(){
+            return handler.apply(obj,arguments)
+        }
+        
+    }
+}
+class Firework{
+    constructor(){
+        this.type=null
+        this.timer=null
+        this.fnManual=fgm.bind(this,this.manual)
+    }
+    initialize(){
+        this.timer&&clearInterval(this.timer)//清除自动放烟花
+        fgm.removeEvent(document,'click',this.fnManual)//清除手动放烟花
+        switch (this.type) {
+            case 'manual':
+                fgm.addEvent(document,'click',this.fnManual)
+                break;
+            case 'auto':
+                this.auto()
+                break;
+        }
+    }
+    auto(){
+        this.timer=setInterval(()=>{
+            let x=fgm.randomRange(50, document.documentElement.clientWidth - 50)
+            let y=fgm.randomRange(50, document.documentElement.clientWidth - 150)
+            this.create(x,y)
+        },fgm.randomRange(900, 1100))
+    }
+    manual(event){
+        event=event||window.event
+        this.create(event.clientX,event.clientY)
+    }
+    create(x,y){
+        console.log(x,y)
+        let div=document.createElement('div');
+        //生成一个从下往上窜的烟花点
+        div.style.position="absolute";
+        div.style.top=document.documentElement.clientHeight+'px';
+        div.style.left=x+'px';
+        div.style.width='4px';
+        div.style.height='30px';
+        div.style.borderRadius='4px';
+        div.style.backgroundColor=fgm.getRangeColor();
+
+        document.body.appendChild(div)
+        div.timer=setInterval(()=>{
+            //往上窜的动画（一点点往鼠标点击的位置移动）
+            div.style.top=div.offsetTop-20+'px'
+            if(div.offsetTop<=y){
+                clearInterval(div.timer)
+                document.body.removeChild(div)
+                {//块级作用于替代立即执行函数的写法
+                    //在50-100之间随机生成碎片
+                    let len=(/msie/i.test(navigator.userAgent)||this.type==2?fgm.randomRange(20,30):fgm.randomRange(50,100))
+                    let chips=[],chip=null,fragment=document.createDocumentFragment(),timer
+                    for(let i=0;i<len;i++){
+                        //生成一个爆炸烟花的点
+                        chip=document.createElement('div')
+                        chip.style.position='absolute'
+                        chip.style.top=y+'px'
+                        chip.style.left=x+'px'
+                        chip.style.width='4px'
+                        chip.style.height='4px'
+                        chip.style.overflow='hidden'
+                        chip.style.borderRadius='4px'
+                        chip.style.backgroundColor=fgm.getRangeColor()
+                        
+                        chip.speedX=fgm.randomRange(-20,20)
+                        chip.speedY=fgm.randomRange(-20,20)
+                        fragment.appendChild(chip)
+                        chips.push(chip)
+                    }
+                    //先把所有随机生成的碎片加入到页面中
+                    document.body.appendChild(fragment)
+                    //再一个个爆开，用setInterval呈现动画的效果
+                    timer=setInterval(()=>{
+                        for(let obj of chips){
+                            obj.style.top=obj.offsetTop+obj.speedY+'px'
+                            obj.style.left=obj.offsetLeft+obj.speedX+'px'                       
+                            obj.speedY++
+                            //若果到了边缘，就从页面上删除随便
+                            if(obj.offsetTop<0||obj.offsetLeft<0||obj.offsetTop>document.documentElement.clientHeight||obj.offsetLeft>document.documentElement.clientWidth){
+                                document.body.removeChild(obj),
+                                chips.splice(chips.indexOf(obj), 1)
+                            }
+                        }
+                        //知道页面上没有碎片了，就不需要再执行动画了
+                        chips.length==0&&clearInterval(timer)
+                    },30)
+                }
+            }
+        },30)
+    }
+}
+fgm.addEvent(window,'load',function(){
+    let box=document.getElementById('box')
+    let firework=new Firework()
+    fgm.addEvent(box,'click',function(event){
+        event=event||window.event
+        if(event.target.tagName='BUTTON'){
+            switch (event.target.id) {
+                case 'btnManual':
+                    firework.type='manual'
+                    break;
+                case 'btnAuto':
+                    firework.type='auto'
+                    break;
+                case 'btnStop':
+                    firework.type='stop'
+                    break;
+            }
+            firework.initialize()
+            event.stopPropagation?event.stopPropagation():event.cancelBubble = true
+        }
+    })
+})
+</script>
+</html>
